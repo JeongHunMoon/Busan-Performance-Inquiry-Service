@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="../ajax-cross-origin/js/jquery.ajax-cross-origin.min.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                crossOrigin: true,
+                dataType: "json",
+                url: "https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=8ktFgkosFIYx7p%2FkZzmjWvD20eEUWMgZOipB0SNmBt%2BllCqqY0UoTiS0SHYConkvQ14vg31BhVGRGUFZ%2BMWBfg%3D%3D&pageNo=1&numOfRows=10"
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <p id="content"></p>
+</body>
+
+</html>

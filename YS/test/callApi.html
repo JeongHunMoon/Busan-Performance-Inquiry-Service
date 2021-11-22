@@ -1,0 +1,28 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>공공데이터 API 사용 예제</title>
+</head>
+
+<body>
+  <p id="sample_data"></p>
+  <script>
+    const url = 'http://busan-show.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayService/getBusanCulturePlay?serviceKey=8ktFgkosFIYx7p%2FkZzmjWvD20eEUWMgZOipB0SNmBt%2BllCqqY0UoTiS0SHYConkvQ14vg31BhVGRGUFZ%2BMWBfg%3D%3D&pageNo=1&numOfRows=10&resultType=json';
+    dataPane = document.getElementById("sample_data");
+    fetch(url,   {
+            method: "POST", 
+            body: JSON.stringify(data),
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+      .then(res => res.json())
+      .then(resJson => {
+        dataPane.innerText = JSON.stringify(resJson, null, 1);
+      })
+  </script>
+</body>
+
+</html>

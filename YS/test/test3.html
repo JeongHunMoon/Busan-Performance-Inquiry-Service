@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>공공데이터 API 사용 예제</title>
+</head>
+
+<body>
+  <p id="sample_data"></p>
+  <script>
+    const proxy = 'https://moonjeonghunapp1.herokuapp.com/'
+    const apiKey = '5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D'
+    const apiUrl = 'http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey='
+    const parameter = '&pageNo=1&numOfRows=10&resultType=json';
+    const url = proxy + apiUrl + apiKey + parameter;
+    dataPane = document.getElementById("sample_data");
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+
+  </script>
+</body>
+
+</html>
