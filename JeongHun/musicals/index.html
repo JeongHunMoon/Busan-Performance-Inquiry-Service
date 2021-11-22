@@ -1,0 +1,70 @@
+<html>
+ <head>
+ <meta charset="UTF-8">
+ <title>공공데이터 API 사용 예제</title>
+ </head>
+ <body id ="body">
+ <p id="sample_data"></p>
+ <script>
+ //const corona = 'https://moonjeonghunapp1.herokuapp.com/https://api.odcloud.kr/api/15077586/v1/centers?page=1&perPage=10&serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&returnType=JSON';
+ const detail = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
+ const Simplelist = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalService/getBusanCultureMusical?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+ const place = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+ 
+ function getToday () {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    return year +'-'+ month +'-' + day;
+}
+
+ var dataPane = document.getElementById("sample_data");
+ var today = getToday(); //현재 날짜 yyyy-mm-dd 형태 반환
+ var placeInformation= []; //공연장 장소 저장
+ var musicalInformation = [];
+
+
+ fetch(Simplelist)
+ .then(res => res.json())
+ .then(resJson => {
+   // dataPane.innerText = JSON.stringify(resJson, null, 1);
+     var center = resJson.getBusanCultureMusical.item;
+     var totalCount = resJson.getBusanCulturePerformPlace.totalCount;
+     for(let i =0; i<totalCount; i++) {
+        placeInformation[i]=center[i]; //전체 공연장 정보 {} 객체를 placeInformation에 저장
+     }
+
+ });
+
+
+ fetch(place)
+ .then(res => res.json())
+ .then(resJson => {
+    //dataPane.innerText = JSON.stringify(resJson, null, 1);
+     var center = resJson.getBusanCulturePerformPlace.item;
+     var totalCount = resJson.getBusanCulturePerformPlace.totalCount;
+     for(let i =0; i<totalCount; i++) {
+        placeInformation[i]=center[i]; //전체 공연장 정보 {} 객체를 placeInformation에 저장
+     }
+
+ });
+
+ fetch(detail)
+ .then(res => res.json())
+ .then(resJson => {
+ dataPane.innerText = JSON.stringify(resJson, null, 1);
+ var musical = resJson.getBusanCultureMusicalDetail.item;
+ var totalCount = resJson.getBusanCultureMusicalDetail.totalCount;
+ for(let i = 0; i <totalCount; i++) {
+     //현재 시각 기준 공연 예정인 뮤지컬만 추출
+     if(musical[i].op_st_dt >= today) {
+        musicalInformation[i] = musical[i];
+     }
+ }
+ });
+
+
+ </script>
+ </body>
+</html>
