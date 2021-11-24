@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap');
+.container{
+    width: 100%; 
+    height: 94%;
+    align-content: center;
+    
+}
+.top{
+    width: 100%;
+    height: 102%;
+    overflow-y: scroll;
+}
+
+.labels input[type="radio"]:checked,
+.labels input[type="radio"]:not(:checked)
+{
+    -webkit-appearance: none;
+    display: none;
+    position: relative;
+}
+.labels input[type="radio"]:checked + .outBox
+{
+    background: skyblue;
+    color: rgb(148, 0, 0);
+}
+
+.labelTop{
+    display: inline-block;
+    margin: 5%;
+    width: 75%;
+    height: 140px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px grey;
+    position: relative;
+
+}
+
+.outBox{
+    text-align:center;
+
+    width: 100%;
+    height: 100%;
+    top:0;
+    padding: 5% 5%;
+    margin: 0px;
+
+    text-align: center;
+    -ms-user-select: none; 
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 10px;
+    background-color: #eaeaea;
+
+}
+.inner{
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 1%;
+    display: inline-block;
+    position: relative;
+}
+
+.labels{
+    width: 0px;
+    height: 1px;
+
+}
+
+/**/
+
+
+
+

@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <title>부산 공연 정보 시스템pc버전</title>
     <link rel="stylesheet" href="./css/mainForm.css" type="text/css">
+    <link rel="stylesheet" href="./css/radioButton.css" type="text/css">
+    <link rel="stylesheet" href="./css/loading.css" type="text/css">
 </head>
 
 <body>
+    <div class="loading">
+        <div class="loadimg">
+            <img src="./imgs/Spinner.gif" alt="spinner">
+        </div>
+    </div>
     <script>
+        //모바일 or pc를 os로 구분
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
-
         if (isMobile()) {
             console.log("platform is mobile");
-            location.href("./mobile.html")
+            window.location.href = './mobile.html'
 
         } else {
             console.log("platform is pc");
@@ -26,12 +32,27 @@
     
     <header class="header">pc버전 테스트</header>
    
-    <nav class="nav">메뉴</nav>
+    <nav class="nav">기능 메뉴 - 메모<br>
+        <input type="checkbox" id="musical" onclick="checkBoxClicked()" checked="checked"> 뮤지컬<br>
+        <input type="checkbox" id="opera"  onclick="checkBoxClicked()" checked="checked"> 오페라<br>
+        <input type="checkbox" id="play"  onclick="checkBoxClicked()" checked="checked"> 연극<br>
+    </nav>
     
-    <aside class="aside">간단한 전체 상영 정보<br>
+    <aside class="aside">
         
-        <ul class="theater_data" ></ul>
-        <div id="theater_data"></div>
+        <div style="position: relative; width: 100%; height: 4%;">상영정보</div>
+        <div class="container">
+            <div class="top">
+                <!--<div class="labelTop">
+                    <label class="labels">
+                        <input type="radio" name="nope">
+                        <div class="outBox">test</div>
+                    </label>
+                    테스트 버튼-->
+                </div>
+            <div>
+        </div>
+        
     </aside>
     
     <section class="sectionMap">
@@ -41,16 +62,19 @@
 
     </section>
     
-    <section class="sectionInfo">공연 상세 정보창 - 공연 클릭시 활성화
-        <div class="detailInfo">
-        </div>
+    <section class="sectionInfo">
+        <div style="text-align: center; position: relative; width: 100%; height: 10%;">공연 상세 정보창 - 공연 클릭시 활성화</div>
+        <div style="overflow-y: scroll; height: 100%; height: 90%;"><div class="detailInfo">
+ </div></div>
+    
     </section>
 
     <footer class="footer">하단 크레딧</footer>
-
+    <div class="empty"></div>
             <!--지도 가져오기-->
+            <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
     <script src="./js/mapApi.js"></script>
-    <script src="./js/musical.js"></script>
+    <script src="./js/show.js"></script>
 </body>
 
 </html>

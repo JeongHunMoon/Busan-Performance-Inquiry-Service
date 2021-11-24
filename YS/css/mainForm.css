@@ -1,3 +1,8 @@
+
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
     margin: 0;
@@ -17,12 +22,11 @@ body {
     background: rgb(140, 255, 236);
 }
 .aside {
-    overflow: scroll;
     width: 20%;
     height: 90%;
     float: right;
     text-align: center;
-    background: rgb(140, 255, 236);
+    background: rgb(108, 160, 255);
 }
 .sectionMap {
     width: 70%;
@@ -32,7 +36,6 @@ body {
 }
 .sectionInfo {
     color: white;
-    overflow: scroll;
     width: 70%;
     height: 40%;
     float: left;
@@ -44,3 +47,20 @@ body {
     clear: both;
     background: rgb(252, 205, 252);
 }
+
+
+.theater_data::-webkit-scrollbar {
+    width: 15px;
+  }
+.theater_data::-webkit-scrollbar-thumb {
+    background-color: #002fff;
+    border-radius: 15px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+.theater_data::-webkit-scrollbar-track {
+    background-color: rgba(228, 234, 255, 0);
+    border-radius: 15px;
+    box-shadow: inset 0px 0px 5px rgba(114, 75, 255, 0);
+  }
+/*라디오버튼 디자인*/

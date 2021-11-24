@@ -17,9 +17,9 @@
       }
 
       #background {
-        width: 100%;
+        width: 90%;
         height: 0px;
-        margin: 0;
+        margin: 0 auto;
       }
       #dropdown{
         display : block;
@@ -30,15 +30,13 @@
       }
       #ButtonImage {
         display: block;
-        width:50px ;
-        height: 100% ;
+        width:50px;
+        height: 100px;
         float:left ;
         margin-top: 0px;
         margin-left : 0px;
         padding-bottom : 0px;
         cursor:pointer;
-        border-radius: 100%;
-        border: 1px solid red;
       }
       
 
@@ -127,6 +125,8 @@
         padding-top:20px;
       }
       #musicalDetailInformation {
+        overflow-y:auto; overflow-X:auto; white-space:nowrap;
+        word-break:break-all;
         width: 0px;
         height: 0px;
         margin: 0 auto;
@@ -137,18 +137,22 @@
         background-color: greenyellow;
         box-shadow: 20px 20px 20px gray;
         transition:all ease 0.5s;
-        
+        font-size:15px;
+        letter-spacing:-0.5px;
+      }
+      #musicalDetailInformation h4 {
+        margin-bottom: 5px;
+        font-weight: bold;
       }
       #musicalDetailInformation:hover {
         background-color: #EAEAEA;
-        
       }
    </style>
  </head>
  <body>
    <div id = "background">
      <header id ="dropdown">
-      <img id = "ButtonImage" src = "../image/gnb_search.png">
+      <img id = "ButtonImage" src = "../image/clickImage.png">
      </header>
      <main id = "main">
        <div id = "hiddenList">
@@ -213,11 +217,7 @@
           return function () {
             infoWindow.close();
           };
-        } 
-
-
-
-
+        }
 
         //---------------공연장 이름, 뮤지컬 정보 추출----------------------------------- 
         fetch(place)
@@ -258,8 +258,6 @@
         
         // 지도를 생성한다 
         var map = new kakao.maps.Map(mapContainer, mapOption); 
-        
-
         var ps = new kakao.maps.services.Places()
         // 지도에 마커를 생성하고 표시한다
         let j;
@@ -299,7 +297,8 @@
             let displayMarker = function (place) {
 
                 var infoWindow = new kakao.maps.InfoWindow({
-                    content: `${musicalInformation[i].place_nm}, ${musicalInformation[i].title}`,
+                    content: `Location: ${musicalInformation[i].place_nm}
+                    Title: ${musicalInformation[i].title}`,
                 });
                 
                 // 마커를 생성하고 지도에 표시합니다
@@ -311,8 +310,8 @@
                 musicalInformation[i].lngt = place.x;
                 console.log(">>"+musicalInformation[i].lttd)
 
-                kakao.maps.event.addListener(marker, "mouseover", mouseOverListener(map, marker, infoWindow)); 
-                kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(infoWindow))
+                //kakao.maps.event.addListener(marker, "click", mouseOverListener(map, marker, infoWindow)); 
+                //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow))
               
                 musicalMarker.push(marker);  // 생성된 마커를 배열에 추가합니다
             }
@@ -324,7 +323,6 @@
           else {
             var lat = placeObject.lttd; //위도 저장
             var lng = placeObject.lngt; //경도 저장
-            console.log(lat+','+lng+musicalInformation[i].title);
 
             //-------------맵에 마커 출력-------------------------------
             var marker = new kakao.maps.Marker({
@@ -333,13 +331,14 @@
             });
 
             var infoWindow = new kakao.maps.InfoWindow({
-                content: `${placeObject.addr}, ${musicalInformation[i].title}`,
+              content: `Location: ${musicalInformation[i].place_nm}
+              Title: ${musicalInformation[i].title}`,
             });
             // 마커 추가
                   
             // 마커 이벤트리스너 등록
-            kakao.maps.event.addListener(marker, "mouseover", mouseOverListener(map, marker, infoWindow)); 
-            kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(infoWindow));
+            //kakao.maps.event.addListener(marker, "click", mouseOverListener(map, marker, infoWindow)); 
+            //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow));
             
             musicalMarker.push(marker);  // 생성된 마커를 배열에 추가합니다
           }
@@ -364,6 +363,12 @@
             setMarkers(null);    
         }
 
+        //해당 위도 경도로 맵 위치 이동 
+        function setFocusCenter(lt, ln) {
+          var movaLatLon = new kakao.maps.LatLng(lt, ln);
+          map.setCenter(movaLatLon);
+        }
+
         //----스크롤에 목록 저장-----------------------------
         var scrollBar_ul = document.querySelector('#scrollBar_ul');
         var idMainTag = document.querySelector('#main');
@@ -374,25 +379,16 @@
         while ( scrollBar_ul.hasChildNodes() ) { scrollBar_ul.removeChild( scrollBar_ul.firstChild ); }// 태그 초기화
         for(let i = 0; i < musicalInformation.length; i++) {
               const li  = document.createElement('li');
-              li.insertAdjacentHTML('beforeend', `<strong>${musicalInformation[i].title}</strong><br><br>
+              li.insertAdjacentHTML('beforeend', `<strong style="pointer-events: none;">${musicalInformation[i].title}</strong><br><br>
               ${musicalInformation[i].op_st_dt} ~ ${musicalInformation[i].op_ed_dt}<br><br>
               ${musicalInformation[i].runtime}`);
               scrollBar_ul.appendChild(li);
               li.style.boxShadow = '5px 5px 5px gray';
               li.style.borderRadius = "10px";
-              li.onmouseover = function(event) {
-                event.target.style.backgroundColor = "skyblue";
-              }
-              li.onmouseout = function(event) {
-                event.target.style.backgroundColor = "#EAEAEA";
-              }
-
-      
               
-
               li.onclick = function(event) {
-                console.log(musicalDetailInformation.style.width);
                 if(musicalDetailInformation.style.width == '0px' || musicalDetailInformation.style.width =="") {
+                  event.target.style.backgroundColor = "skyblue";
                   if( musicalInformation[i].lttd == "") {
                     hideMarkers();
                     alert("장소를 조회할 수 없습니다. \n 뮤지컬 정보만 표시합니다.");
@@ -414,20 +410,47 @@
                     });
 
                     cilckMarker.setMap(map);
+                    setFocusCenter(musicalInformation[i].lttd, musicalInformation[i].lngt);
+                  }
+
+                  idMainTag.style.height = '115%'; ///80%->120%
+                  idMain_section1Tag.style.height = '70%'; ///100%->65%
+                  musicalDetailInformation.style.width = '100%';
+                  musicalDetailInformation.style.height = '250px';  
+
+                   /*여기다 뮤지컬 정보 표시*/
+                  for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
+                    if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
+                      musicalDetailInformation.insertAdjacentHTML('beforeend', 
+                     `<h4>Title: </h4>${musicalInformation[i].title}<br>
+                      <h4>Date: </h4>${musicalInformation[i].op_st_dt} ~ ${musicalInformation[i].op_ed_dt}<br
+                      <h4>Location: </h4>${musicalInformation[i].place_nm}<br>
+                      <h4>Runtime: </h4>${musicalInformation[i].runtime}<br>
+                      <h4>Showtime: </h4>${musicalInformation[i].showtime}<br>
+                      <h4>Rating: </h4>${musicalInformation[i].rating}<br>
+                      <h4>Price: </h4>${musicalInformation[i].price}<br>
+                      <h4>Casting: </h4>${musicalInformation[i].casting}<br>
+                      <h4>Enterprise: </h4>${musicalInformation[i].enterprise}<br>
+                      <h4>URL: </h4><a href = "${musicalInformation[i].dabom_url}" target="_blank">${musicalInformation[i].dabom_url}</a><br><br><br>
+                      `);
+                      break;
+                    }
                   }
                  
-                }  
-
-                idMainTag.style.height = '115%'; ///80%->120%
-                idMain_section1Tag.style.height = '70%'; ///100%->65%
-                musicalDetailInformation.style.width = '100%';
-                musicalDetailInformation.style.height = '250px';
-               
+                } 
               }
             }      
+          var scrollBar_ul_childCount = document.querySelector('#scrollBar_ul');
 
           musicalDetailInformation.onclick = function() {
           while ( musicalDetailInformation.hasChildNodes() ) { musicalDetailInformation.removeChild( musicalDetailInformation.firstChild ); }// 태그 초기화
+          //설명창 닫으면 li중 배경 색이 skyblue 이면 skyblue->#EAEAEA로 변경
+          for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
+            if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
+              scrollBar_ul_childCount.children[i].style.backgroundColor = "#EAEAEA";
+              break;
+            }
+          }
           showMarkers();
           cilckMarker.setMap(null);
           musicalDetailInformation.style.width = '0px';
@@ -444,21 +467,14 @@
         let hiddenList_content = document.getElementById('hiddenList_content');
         let hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
 
-        hiddenbutton.onmousedown = function() {
-          hiddenbutton.style.backgroundColor = 'red';
-        }
-        hiddenbutton.onmouseup  = function() {
-          hiddenbutton.style.backgroundColor = 'white';
-        }
         hiddenbutton.onclick = function() {
           if(hiddenList.style.width=="" || hiddenList.style.width=="0%") {
             hiddenList_content.style.width = '100px';
             hiddenList.style.width='100%';
-            hiddenList_content_ul.style.display = 'block';
-    
+            setTimeout(()=>{hiddenList_content_ul.style.display = 'block';}, 300);
             
           }
-          else {
+          else if(hiddenList.style.width=="100%" && hiddenList_content_ul.style.display == 'block') {
             hiddenList_content_ul.style.display = 'none';
             hiddenList.style.width='0%';
             hiddenList_content.style.width = '0px';
