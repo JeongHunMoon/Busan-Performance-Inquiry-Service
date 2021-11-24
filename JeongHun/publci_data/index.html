@@ -16,6 +16,23 @@
         list-style-type: none;
       }
 
+      #loadingScreen {
+        display:block;
+        position: absolute;
+        top:-6%;
+        left:0;
+        z-index:2;
+        width: 100%;
+        height: 120%;
+        margin: 0 auto;
+        background-color: antiquewhite;
+        text-align: center;
+        font-weight: bold;
+        font-size:30px;
+      }
+      #loadingScreen p{
+        margin-top:80%;
+      }
       #background {
         width: 90%;
         height: 0px;
@@ -30,13 +47,23 @@
       }
       #ButtonImage {
         display: block;
-        width:10%;
-        height: 100%;
+        width:40px;
+        height: 90%;
         float:left ;
-        margin-top: 0px;
-        margin-left : 0px;
+        margin-top: 2px;
+        margin-left : 5px;
         padding-bottom : 0px;
         cursor:pointer;
+        border-radius: 100%;
+        transition:all ease 1.5s;
+				box-shadow: 2px 2px 2px gray;
+        background-color: #EAEAEA;
+        text-align: center;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      #ButtonImage p {
+        margin-top:10px
       }
       
 
@@ -112,7 +139,26 @@
         width: 100%;
         height: 10%;
         background-color: dimgray;
+      
       }
+      #naviIcon, #mapIcon, #reservationIcon{
+        display: block;
+        float:left;
+        margin-top:15px;
+        width: 60px;
+        height: 60px;
+        margin-left:10%;
+        background-color: #EAEAEA;
+        border-radius: 100%;
+        cursor:pointer;
+        text-align: center;
+        transition:all ease 0.5s;
+      }
+
+      #naviIcon:hover, #mapIcon:hover, #reservationIcon:hover {
+        background-color: greenyellow;
+      }
+
       #scrollBar > ul { font-size:0px; text-overflow : scroll;}
       #scrollBar > ul > li {
         display:inline-block; 
@@ -136,7 +182,7 @@
         text-align: center;
         background-color: greenyellow;
         box-shadow: 20px 20px 20px gray;
-        transition:all ease 0.5s;
+        transition:all ease 1s;
         font-size:15px;
         letter-spacing:-0.5px;
       }
@@ -166,9 +212,10 @@
   </script> -->
    <div id = "background">
      <header id ="dropdown">
-      <img id = "ButtonImage" src = "./image/clickImage.png">
+      <div id = "ButtonImage"><p>click</p></div>
      </header>
      <main id = "main">
+       <div id="loadingScreen"><p>Loading...</p></div>
        <div id = "hiddenList">
         <div id="hiddenList_content">
           <ul id = "hiddenList_content_ul">
@@ -188,7 +235,11 @@
        </section>
       
      </main>
-     <footer id ="footer"></footer>
+     <footer id ="footer">
+       <div id ="naviIcon"><p style="font-size: 13px;font-weight: bold;margin-top: 15px;">카카오<br>네비</p></div>
+       <div id ="mapIcon"><p style="font-size: 14px;font-weight: bold;margin-top: 20px;">카카오맵</p></div>
+       <div id ='reservationIcon'><p style="font-size: 15px;font-weight: bold;margin-top: 20px;">예매</p></div>
+      </footer>
    </div>
    
    <script type="text/javascript" src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=3f5d2674c29eb3cb86007a28668890f6&libraries=services"></script>
@@ -259,8 +310,17 @@
                 musicalInformation.push(musical[i]);
             }
         }
-
-
+        //배열을 공연 날짜를 기준으로 오름차순 정렬
+        var temp;
+        for (let m = 0; m < musicalInformation.length - 1; m++) {
+          for (let n = 0; n < musicalInformation.length - 1 - m; n++){
+              if (musicalInformation[n].op_st_dt > musicalInformation[n + 1].op_st_dt) {
+                  temp = musicalInformation[n];
+                  musicalInformation[n] = musicalInformation[n + 1];
+                  musicalInformation[n + 1] = temp;
+              }
+          }
+        }
 
         //-------------맵에 마커 출력---------------------------------------------------- 
         var mapContainer = document.getElementById('map') // 지도를 표시할 div 
@@ -283,11 +343,11 @@
                //뮤지컬 요소 객체에 위도 경도 추가
                musicalInformation[i].lttd = placeObject.lttd;
                musicalInformation[i].lngt = placeObject.lngt;
+               musicalInformation[i].addr = placeObject.addr;
                break;
             }
           }
           if(j == placeInformation.length) {
-            console.log(musicalInformation[i].place_nm);
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             let placesSearchCB = function (data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
@@ -322,9 +382,9 @@
                 });
                 musicalInformation[i].lttd = place.y;
                 musicalInformation[i].lngt = place.x;
-                console.log(">>"+musicalInformation[i].lttd)
+                musicalInformation[i].addr = place.place_name;
 
-                //kakao.maps.event.addListener(marker, "click", mouseOverListener(map, marker, infoWindow)); 
+                //kakao.maps.event.addListener(marker, "clickz", mouseOverListener(map, marker, infoWindow)); 
                 //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow))
               
                 musicalMarker.push(marker);  // 생성된 마커를 배열에 추가합니다
@@ -393,13 +453,13 @@
         while ( scrollBar_ul.hasChildNodes() ) { scrollBar_ul.removeChild( scrollBar_ul.firstChild ); }// 태그 초기화
         for(let i = 0; i < musicalInformation.length; i++) {
               const li  = document.createElement('li');
-              li.insertAdjacentHTML('beforeend', `<strong>${musicalInformation[i].title}</strong><br><br>
+              li.insertAdjacentHTML('beforeend', `${musicalInformation[i].title}<br><br>
               ${musicalInformation[i].op_st_dt} ~ ${musicalInformation[i].op_ed_dt}<br><br>
               ${musicalInformation[i].runtime}`);
               scrollBar_ul.appendChild(li);
               li.style.boxShadow = '5px 5px 5px gray';
               li.style.borderRadius = "10px";
-              
+              li.style.fontWeight= 'bold';
               li.onclick = function(event) {
                 if(musicalDetailInformation.style.width == '0px' || musicalDetailInformation.style.width =="") {
                   event.target.style.backgroundColor = "skyblue";
@@ -437,7 +497,7 @@
                     if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
                       musicalDetailInformation.insertAdjacentHTML('beforeend', 
                      `<h4>Title: </h4>${musicalInformation[i].title}<br>
-                      <h4>Date: </h4>${musicalInformation[i].op_st_dt} ~ ${musicalInformation[i].op_ed_dt}<br
+                      <h4>Date: </h4>${musicalInformation[i].op_st_dt} ~ ${musicalInformation[i].op_ed_dt}<br>
                       <h4>Location: </h4>${musicalInformation[i].place_nm}<br>
                       <h4>Runtime: </h4>${musicalInformation[i].runtime}<br>
                       <h4>Showtime: </h4>${musicalInformation[i].showtime}<br>
@@ -445,17 +505,17 @@
                       <h4>Price: </h4>${musicalInformation[i].price}<br>
                       <h4>Casting: </h4>${musicalInformation[i].casting}<br>
                       <h4>Enterprise: </h4>${musicalInformation[i].enterprise}<br>
-                      <h4>URL: </h4><a href = "${musicalInformation[i].dabom_url}" target="_blank">${musicalInformation[i].dabom_url}</a><br><br><br>
+                      <h4>More Information And Reservation: </h4><a href = "${musicalInformation[i].dabom_url}" target="_blank">${musicalInformation[i].dabom_url}</a><br><br><br>
                       `);
                       break;
                     }
                   }
-                 
                 } 
               }
 				}		
           var scrollBar_ul_childCount = document.querySelector('#scrollBar_ul');
 
+          //뮤지컬 상세보기 창 클릭시 이벤트
           musicalDetailInformation.onclick = function() {
           while ( musicalDetailInformation.hasChildNodes() ) { musicalDetailInformation.removeChild( musicalDetailInformation.firstChild ); }// 태그 초기화
           //설명창 닫으면 li중 배경 색이 skyblue 이면 skyblue->#EAEAEA로 변경
@@ -473,6 +533,67 @@
           idMain_section1Tag.style.height = '100%'; //원래 크기 복구
 
         }
+
+        //footer 3가지 이벤트 등록
+        var naviIcon = document.querySelector('#naviIcon');
+        var mapIcon = document.querySelector('#mapIcon');
+        var reservationIcon = document.querySelector('#reservationIcon');
+        Kakao.init('3f5d2674c29eb3cb86007a28668890f6');
+        console.log(musicalInformation[0].addr);
+        console.log(musicalInformation[0].lttd);
+        console.log(musicalInformation[0].lngt);
+        naviIcon.onclick = function() {
+          for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
+              if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
+                if(musicalInformation[i].lttd == "") {
+                  alert(`장소를 조회할 수 없어 네비게이션으로 이동하지 않습니다.
+                  상세보기란에서 위치를 확인해주세요.`);
+                  return;
+                }
+                else {
+                  Kakao.Navi.start({
+                    name: musicalInformation[i].addr,
+                    x: Number(musicalInformation[i].lngt),
+                    y: Number(musicalInformation[i].lttd),
+                    coordType: 'wgs84'
+                  });
+                  return;
+                }
+              } 
+          }
+          alert(`공연을 선택하세요!`);
+        }
+       
+        mapIcon.onclick = function() {
+          for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
+              if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
+                if(musicalInformation[i].lttd == "") {
+                  alert(`장소를 조회할 수 없어 카카오맵으로 이동하지 않습니다.
+                  상세보기란에서 위치를 확인해주세요.`);
+                  return;
+                }
+                else {
+                  var url2 = `https://map.kakao.com/link/to/${musicalInformation[i].addr},${musicalInformation[i].lttd},${musicalInformation[i].lngt}`;
+                  window.open(url2);
+                  return;
+                }
+              }
+          }
+          alert(`공연을 선택하세요!`);
+        }
+
+        reservationIcon.onclick = function() {
+          for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
+              if(scrollBar_ul_childCount.children[i].style.backgroundColor == "skyblue") {
+                window.open(musicalInformation[i].dabom_url);
+                return;
+              }
+          }
+          alert(`공연을 선택하세요!`);
+        }
+
+        var loadingScreen = document.querySelector('#loadingScreen');
+        loadingScreen.style.display='none';
         });
 
         //드롭다운 클릭시 이벤트 구현
@@ -480,51 +601,25 @@
         let hiddenList = document.getElementById('hiddenList');
         let hiddenList_content = document.getElementById('hiddenList_content');
         let hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
+        let ButtonImage = document.querySelector('#ButtonImage');
 
         hiddenbutton.onclick = function() {
           if(hiddenList.style.width=="" || hiddenList.style.width=="0%") {
+            ButtonImage.style.transform="rotate(360deg)";
             hiddenList_content.style.width = '100px';
             hiddenList.style.width='100%';
             setTimeout(()=>{hiddenList_content_ul.style.display = 'block';}, 300);
             
           }
           else if(hiddenList.style.width=="100%" && hiddenList_content_ul.style.display == 'block') {
+            ButtonImage.style.transform="rotate(0deg)";
             hiddenList_content_ul.style.display = 'none';
             hiddenList.style.width='0%';
             hiddenList_content.style.width = '0px';
           }
         }
-       
- </script> 
- <script>
-   
  </script>
 
-   <script type='text/javascript'>
-     Kakao.init('3f5d2674c29eb3cb86007a28668890f6');
-     var url2 = 'https://map.kakao.com/link/to/카카오판교오피스,37.402056,127.108212';
-     function navi() {
-      // location.href= url2;
- 
-       Kakao.Navi.start({
-         name: "현대백화점 판교점",
-         x: 127.11205203011632,
-         y: 37.39279717586919,
-         coordType: 'wgs84'
-       });
-     }
-   </script>
-   <!-- <script>
-     function isMobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-     } 
-
-     if (isMobile()) {
-        alert('모바일입니다.')
-      } else {
-        alert('모바일이 아닙니다.')    
-      }
-   </script>  -->
  </body>
  </html>   
  
