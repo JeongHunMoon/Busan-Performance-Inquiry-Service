@@ -55,14 +55,14 @@
         padding-bottom : 0px;
         cursor:pointer;
         border-radius: 100%;
-        transition:all ease 1s;
-        box-shadow: 2px 2px 2px gray;
+        transition:all ease 1.5s;
+            box-shadow: 2px 2px 2px gray;
         background-color: #EAEAEA;
         text-align: center;
         font-weight: bold;
         font-size: 13px;
       }
-      #ButtonImage p, #nowPlaying p {
+      #ButtonImage p {
         margin-top:10px
       }
       
@@ -93,7 +93,6 @@
     }
  
     .test_obj input[type="radio"] + span {  
-        margin-left: 10px;
         width:98px;
         height: 20px;
         display: block;
@@ -116,11 +115,9 @@
       
 
       #hiddenList_content_ul {
-       display: none;
        opacity: 0;
        transition:all ease 0.5s;
        width: 98px;
-       font-weight: 500;
       }
 
       #main #main_section1 {
@@ -207,40 +204,6 @@
       #performanceDetailInformation:hover {
         background-color: #EAEAEA;
       }
-
-      #dateDesignation {
-        margin-top:3%;
-        margin-left: 10%;
-        cursor:pointer;
-        transition:all ease 1s;
-        box-shadow: 2px 2px 2px gray;
-        background-color: #EAEAEA;
-      }
-      #dataDesignation_send {
-        margin-top:3%;
-        cursor:pointer;
-        transition:all ease 1s;
-        box-shadow: 2px 2px 2px gray;
-        background-color: #EAEAEA;
-      }
-      #nowPlaying {
-        display: block;
-        width:40px;
-        height: 90%;
-        float:left ;
-        margin-top: 2px;
-        margin-left:8px;
-        margin-right : 5px;
-        padding-bottom : 0px;
-        cursor:pointer;
-        border-radius: 100%;
-        transition:all ease 1s;
-        box-shadow: 2px 2px 2px gray;
-        background-color: #EAEAEA;
-        text-align: center;
-        font-weight: bold;
-        font-size: 8px;
-      }
    </style>
  </head>
  <body>
@@ -261,9 +224,6 @@
    <div id = "background">
      <header id ="dropdown">
       <div id = "ButtonImage"><p>click</p></div>
-      <div class = "false" id ="nowPlaying" style = "width:40px;"><p style="display: block;">Playing..</p></div>
-      <input class = "false" id = "dateDesignation" type='date'>
-      <input class = "false" id = "dataDesignation_send" type ="submit" value="확인">
      </header>
      <main id = "main">
        <div id="loadingScreen"><p>Loading...</p></div>
@@ -275,8 +235,7 @@
           </ul>
        </div>
        <section id = "main_section1">
-         <div id = "map">
-         </div>
+         <div id = "map"></div>
          <div id = "scrollBar">
             <ul id = "scrollBar_ul"></ul>
          </div>
@@ -317,11 +276,7 @@
         var operaMarker = [];
         var playInformation = [];
         var playMarker = [];
-        var tempMusicalInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
-        var tempOperaInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
-        var tempPlayInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
         var cilckMarker; //특정 위치 마커
-        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해줌
 
         var scrollBar = document.querySelector('#scrollBar');
         var scrollBar_ul = document.querySelector('#scrollBar_ul');
@@ -334,14 +289,11 @@
         var checkMusical = document.querySelector('#checkMusical');
         var checkOpera = document.querySelector('#checkOpera');
         var checkPlay = document.querySelector('#checkPlay');
-        var hiddenbutton = document.querySelector('#ButtonImage');
-        var hiddenList = document.getElementById('hiddenList');
-        var hiddenList_content = document.getElementById('hiddenList_content');
-        var hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
-        var nowPlaying = document.querySelector('#nowPlaying');
-        var dateDesignation = document.querySelector('#dateDesignation');
-        var dataDesignation_send = document.querySelector('#dataDesignation_send');
-        var userInputDateValue;
+        let hiddenbutton = document.getElementById('ButtonImage');
+        let hiddenList = document.getElementById('hiddenList');
+        let hiddenList_content = document.getElementById('hiddenList_content');
+        let hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
+        let ButtonImage = document.querySelector('#ButtonImage');
         //footer 3가지 이벤트 등록
         var naviIcon = document.querySelector('#naviIcon');
         var mapIcon = document.querySelector('#mapIcon');
@@ -368,68 +320,23 @@
 
         function setMarkers(map) {
             if(checkMusical.checked) {
-              for (let i = 0; i < currentMakerLength; i++) {
+              for (let i = 0; i < musicalMarker.length; i++) {
                 musicalMarker[i].setMap(map);
               }  
             }
             else if(checkOpera.checked) {
-              for (let i = 0; i < currentMakerLength; i++) {
+              for (let i = 0; i < operaMarker.length; i++) {
                 operaMarker[i].setMap(map);
               }  
             }
             else if(checkPlay.checked) {
-              for (let i = 0; i < currentMakerLength; i++) {
+              for (let i = 0; i < playMarker.length; i++) {
                 playMarker[i].setMap(map);
               }  
             }           
         }
-        function visibleHeaderElement(str) {
-          if(str == 'viewDateOnly') {
-            dateDesignation.style.opacity = '1';
-            dateDesignation.style.visibility = 'visible';
-            dataDesignation_send.style.opacity = '1';
-            dataDesignation_send.style.visibility = 'visible';
-            dataDesignation_send.value ='확인';
-          }
-          else if(str=='viewPlayingOnly') {
-            nowPlaying.style.opacity = '1';
-            nowPlaying.style.visibility = 'visible';
-            nowPlaying.firstChild.style.display = 'block';
-          }
-          else if(str =="ALL") {
-            nowPlaying.style.opacity = '1';
-            nowPlaying.style.visibility = 'visible';
-            nowPlaying.firstChild.style.display = 'block';
-            dateDesignation.style.opacity = '1';
-            dateDesignation.style.visibility = 'visible';
-            dataDesignation_send.style.opacity = '1';
-            dataDesignation_send.style.visibility = 'visible';
-            dataDesignation_send.value ='확인';
-          }
-        }
-
-        function hiddenHeaderElement() {
-          nowPlaying.style.opacity = '0';
-          nowPlaying.style.visibility = 'hidden';
-          nowPlaying.firstChild.style.display = 'none';
-          dateDesignation.style.opacity = '0';
-          dateDesignation.style.visibility = 'hidden';
-          dataDesignation_send.style.opacity = '0';
-          dataDesignation_send.style.visibility = 'hidden';
-          dataDesignation_send.value ='     ';
-        }
 
         function performanceDetailInformation_eventMethod() {
-              if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewDateOnly');
-              }
-              else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewPlayingOnly');
-              }
-              else {
-                visibleHeaderElement('ALL');
-              }
-
             if(performanceDetailInformation.style.width=='100%') {
               naviIcon.style.backgroundColor = "#EAEAEA"
               mapIcon.style.backgroundColor = "#EAEAEA"
@@ -461,181 +368,43 @@
           }
         }
 
-        function checkBoxEvent_sub_content(performanJson, PerformanceInformation, performaceMaker) {
-          let j = 0;
-          let temp = [];
-          //Playing...버튼을 누른채로 드롭다운 중 뮤지컬을 클릭했을 때 현제 시각 기준 상영하고 있는 뮤지컬 정보만 출력해줌
-          if(PerformanceInformation == musicalInformation && nowPlaying.className=='true') {
-            for(let i = 0; i <musicalInformation.length; i++) {
-              if(musicalInformation[i].op_st_dt <= today) {
-                temp[j] = musicalInformation[i]; j++;
-              }
-            }
-           
-            musicalInformation = [...temp];
-            showPerformance(musicalInformation, musicalMarker);
-            
-          }  
-          else if(PerformanceInformation == operaInformation && nowPlaying.className=='true') {
-            for(let i = 0; i <operaInformation.length; i++) {
-              if( operaInformation[i].op_st_dt <= today) {
-                temp[j] = operaInformation[i]; j++;
-              }
-            }
-           
-            operaInformation = [...temp];
-            showPerformance(operaInformation, operaMarker);
-            
-          } 
-          else if(PerformanceInformation == playInformation && nowPlaying.className=='true') {
-            for(let i = 0; i <playInformation.length; i++) {
-              if( playInformation[i].op_st_dt <= today) {
-                temp[j] = playInformation[i]; j++;
-              }
-            }
-            playInformation = [...temp];
-            showPerformance(playInformation, playMarker);
-          }  
-          else if(dataDesignation_send.className=='true') {sub_sub_dateDesignation_send();} //사용자가 입력한 날짜 기준 공연 정보 출력하기
-          else {showPerformance(PerformanceInformation, performaceMaker);} //날짜 지정도 Playing.. 버튼도 둘 다 안 누른 경우
-          
+        function checkBoxEvent_sub_content(performanJson, PerformanceInformation, performaceMaker) {   
+          sortDate(PerformanceInformation);
+          showPerformance(PerformanceInformation, performaceMaker);
               
-          hiddenbutton.style.transform="rotate(0deg)";
+          ButtonImage.style.transform="rotate(0deg)";
           hiddenList_content_ul.style.opacity = '0';
           hiddenList.style.width='0%';
-          hiddenList_content_ul.style.display = 'none';
-          if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
-              visibleHeaderElement('viewDateOnly');
-          }
-          else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
-            visibleHeaderElement('viewPlayingOnly');
-          }
-          else {
-            visibleHeaderElement('ALL');
-          }
          // hiddenList_content.style.width = '0px';
         }
 
         function checkBoxEvent() {
           checkMusical.onclick = function() {
             if(checkMusical.checked) {
-              musicalInformation = [...tempMusicalInformation]; //원본인 tempMusicalInformation의 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
-                performanceDetailInformation_eventMethod();
+                    performanceDetailInformation_eventMethod();
               }
-              else {
-                checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
-              }
-              
+              checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
             }
           }
           checkOpera.onclick = function() {
             if(checkOpera.checked) {
-              operaInformation = [...tempOperaInformation]; //원본인 tempOperaInformation 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
-                performanceDetailInformation_eventMethod();
+                    performanceDetailInformation_eventMethod();
               }
-              else {
-                checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
-              }
-              
+              checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
             }
           }
           checkPlay.onclick = function() {
             if(checkPlay.checked) {
-              playInformation = [...tempPlayInformation]; //원본인 tempPlayInformation 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                checkBoxEvent_sub_content(playJson, playInformation, playMarker);
-                performanceDetailInformation_eventMethod();
+                    performanceDetailInformation_eventMethod();
               }
-              else {
-                checkBoxEvent_sub_content(playJson, playInformation, playMarker);
-              }
-              
+              checkBoxEvent_sub_content(playJson, playInformation, playMarker);
             }
           }
         }
-        //현재기능-괄호 앞 키워드까지만 검색
-        function keywordFilter(str) {
-            var arr = str.split('');//문자별로 분할
-            var indexNum;
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i] == '(' || arr[i] == '[') { //괄호 검색
-                    indexNum = i;//괄호의 인덱스 저장
-                }
-            }
 
-            var result = arr.join('');
-            result = result.substring(0, indexNum);//제일앞부터 괄호앞까지 자르기
-            return result; //스트링으로 변환하여 반환
-
-        }
-
-        //검색결과가 같은지 반환
-      //공연데이터에 포함된 공연장 이름과 카맵에서 검색한 장소 둘을 비교해주는함수
-      function isSame(str1, str2) {
-          //console.log("start")
-          var isSame = false;
-          //console.log("first "+str1+" "+str2)
-          if (str1 == str2) {//두 문자열이 완전 일치
-              isSame = true;
-          }
-          else {
-              var secondCompareStr1 = keywordFilter(str1).replace(/(\s*)/g, "");
-              var secondCompareStr2 = keywordFilter(str2).replace(/(\s*)/g, "");
-              //console.log("second "+secondCompareStr1+" "+secondCompareStr2);
-              if (secondCompareStr1 == secondCompareStr2) {//괄호와 공백을 제거한 두문자열의 일치
-                  isSame = true;
-              }
-              else {
-                  var noSpaceStr1 = str1.replace(/(\s*)/g, "");//공백제거
-                  var noSpaceStr2 = str2.replace(/(\s*)/g, "");
-                  var strArrS = noSpaceStr1.split('');//작은문자열(검사전)
-                  var strArrB = noSpaceStr2.split('');//큰문자열(검사전)
-                  if (strArrB.length < strArrS.length) {//검사하고 이름에맞게 맞춰줌
-                      var temp = strArrS;
-                      strArrS = strArrB;
-                      strArrB = temp;
-                  }
-                  //console.log("third "+strArrB+" "+strArrS);
-                  if (strArrB == strArrS) {//정제한 문자열이 같으면 true
-                      isSame = true;
-                  }
-                  else {
-                      for (var i = 0; i < strArrS.length; i++) {//큰문자열앞부터에 끝까지에 작은문자열이 포함되있는지 검사
-                          //console.log(strArrS);
-                          if (strArrS[i] != strArrB[i]) {//중간에 같지않으면 break하고 false값 반환
-                              //console.log("forth not Matched "+strArrS+" "+strArrB);
-                              isSame = false;
-                              var forthStr1 = keywordFilter(str1)//괄호및 공백제거
-                              forthStr1 = forthStr1.replace(/(\s*)/g, "");
-
-                              var forthStr2 = keywordFilter(str2)
-                              forthStr2 = forthStr2.replace(/(\s*)/g, "");
-
-                              forthStr1 = forthStr1.replace("부산", '');//부산 제거
-                              forthStr2 = forthStr2.replace("부산", '');
-                              //console.log("fifth "+forthStr1+" "+forthStr2);
-                              if (forthStr1 == forthStr2) {
-                                  isSame = true;
-                              }
-                              else {
-                                  //console.log("ended with no match")
-                                  isSame = false//분기의 마지막
-                              }
-                              break;
-                          } else {
-                              isSame = true;//for문이 도중에 멈추지않았다면 true
-                          }
-                      }
-                  }
-              }
-          }
-
-          return isSame;
-      }//show 배열에따라 마커추가
         function showPerformance(performanceInfor, performaceMaker) {
           //-------------맵에 마커 출력---------------------------------------------------- 
           //기존 마커들 모두 제거
@@ -648,7 +417,6 @@
 
           // 지도에 마커를 생성하고 표시한다
           let j;
-          currentMakerLength=0;
           for(let i=0; i < performanceInfor.length; i++) {
             var placeObject;
             for(j = 0; j < placeInformation.length; j++) {
@@ -662,7 +430,6 @@
               }
             }
             if(j == placeInformation.length) {
-             
               // 키워드 검색 완료 시 호출되는 콜백함수 입니다
               let placesSearchCB = function (data, status, pagination) {
                   if (status === kakao.maps.services.Status.OK) {
@@ -710,10 +477,12 @@
                   //kakao.maps.event.addListener(marker, "clickz", mouseOverListener(map, marker, infoWindow)); 
                   //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow))
                 
-                  performaceMaker[currentMakerLength] = marker;  // 생성된 마커를 배열에 추가합니다
-                  currentMakerLength++;
+                  performaceMaker.push(marker);  // 생성된 마커를 배열에 추가합니다
+                  
               }
-              ps.keywordSearch("부산 "+keywordFilter(performanceInfor[i].place_nm), placesSearchCB);   
+              ps.keywordSearch(performanceInfor[i].place_nm, placesSearchCB);   
+              // 마커 이벤트리스너 등록
+              
             }   
 
             else {
@@ -751,8 +520,7 @@
               //kakao.maps.event.addListener(marker, "click", mouseOverListener(map, marker, infoWindow)); 
               //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow));
               
-              performaceMaker[currentMakerLength]=marker;  // 생성된 마커를 배열에 추가합니다
-              currentMakerLength++;
+              performaceMaker.push(marker);  // 생성된 마커를 배열에 추가합니다
             }
           }
 
@@ -796,10 +564,9 @@
                 li.onclick = function(event) {
                   if(performanceDetailInformation.style.width == '100%') {
                     performanceDetailInformation_eventMethod();
-                    hiddenHeaderElement();
                   }
                   if(performanceDetailInformation.style.width == '0px' || performanceDetailInformation.style.width =="") {
-                    hiddenHeaderElement();
+                  
                     if(performanceInfor==musicalInformation) {event.target.style.backgroundColor = "#603f83";}
                     else if(performanceInfor == operaInformation){event.target.style.backgroundColor = "#fad0c9";}
                     else if(performanceInfor == playInformation) {event.target.style.backgroundColor = "#2bae66";}
@@ -931,27 +698,21 @@
             infoWindow.close();
           };
         }
-        //매개변수로 전달된 json 공연 데이터를 정렬해주는 함수
-        function sortDate(arrData) {
-            for (var i = arrData.length - 1; i > 0; i--) {
-                for (var j = 0; j < i; j++) {
-                    if (arrData[j].op_ed_dt > arrData[j + 1].op_ed_dt) {
-                        var temp = arrData[j];
-                        arrData[j] = arrData[j + 1];
-                        arrData[j + 1] = temp;
-                    }
-                    else if (arrData[j].op_ed_dt == arrData[j + 1].op_ed_dt) {
-                        if (arrData[j].op_st_dt > arrData[j + 1].op_st_dt) {
-                            var temp = arrData[j];
-                            arrData[j] = arrData[j + 1];
-                            arrData[j + 1] = temp;
-                        }
-                    }
-                }
-            }
-            return arrData;
-        }
         
+        function sortDate(performanceInfor) {
+          //배열을 공연 날짜를 기준으로 오름차순 정렬
+          var temp;
+            for (let m = 0; m < performanceInfor.length - 1; m++) {
+              for (let n = 0; n < performanceInfor.length - 1 - m; n++){
+                  if (performanceInfor[n].op_ed_dt > performanceInfor[n + 1].op_ed_dt) {
+                      temp = performanceInfor[n];
+                      performanceInfor[n] = performanceInfor[n + 1];
+                      performanceInfor[n + 1] = temp;
+                  }
+              }
+            }
+        }
+
         
         detailScreenEventSet();
         checkBoxEvent();
@@ -986,7 +747,6 @@
             footer.style.display = 'block';
             headerTag.style.display='block'
             //전역 코드의 마지막으로 선언된 비동기 함수가 끝나면 로딩창 끄기
-            tempMusicalInformation = [...musicalInformation];
         });
 
         fetch(operaJson)
@@ -1005,7 +765,6 @@
                   j++;
                 }
             }
-            tempOperaInformation = [...operaInformation];
         });
 
         fetch(playJson)
@@ -1024,207 +783,26 @@
                   j++;
                 }
             }
-            tempPlayInformation = [...playInformation];
         });
 
         //드롭다운 클릭시 이벤트 구현
         hiddenbutton.onclick = function() {
           if(hiddenList.style.width=="" || hiddenList.style.width=="0%") {
-            hiddenbutton.style.transform="rotate(360deg)";
+            ButtonImage.style.transform="rotate(360deg)";
             //hiddenList_content.style.width = '120px';
             hiddenList.style.width='100%';
-            setTimeout(()=>{hiddenList_content_ul.style.opacity = '1'}, 300);
-            hiddenList_content_ul.style.display = 'block';
-            hiddenHeaderElement();
+            setTimeout(()=>{hiddenList_content_ul.style.opacity = '1';}, 300);
             
           }
           else if(hiddenList.style.width=="100%" && hiddenList_content_ul.style.opacity == '1') {
-            hiddenbutton.style.transform="rotate(0deg)";
+            ButtonImage.style.transform="rotate(0deg)";
             hiddenList_content_ul.style.opacity = '0';
             hiddenList.style.width='0%';
-            hiddenList_content_ul.style.display = 'none'
-            if(performanceDetailInformation.style.width !='100%') {
-              if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewDateOnly');
-              }
-              else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewPlayingOnly');
-              }
-              else {
-                visibleHeaderElement('ALL');
-              }
-            }
-            
             //hiddenList_content.style.width = '0px';
           }
         }
-  
-        function sub_nowPlaying() {
-          let j = 0;
-          let temp = [];
-          let nowPerformenceBorderColor = scrollBar_ul_childCount.children[0];
-          if(nowPlaying.firstChild.style.display == 'block') {
-              //현재 상형중인 공연만 보여주기
-              if(nowPlaying.className == 'false') {
-                nowPlaying.className ='true';
-                nowPlaying.style.backgroundColor = '#BCE55C';
-                nowPlaying.style.transform="rotate(360deg)";
-
-                if(nowPerformenceBorderColor == null) {
-                  musicalInformation = [...temp];
-                  showPerformance(musicalInformation, musicalMarker);
-                }
-                else if(nowPerformenceBorderColor.style.borderColor=="rgb(96, 63, 131)") {
-                  for(let i = 0; i <musicalInformation.length; i++) {
-                    if(musicalInformation[i].op_st_dt <= today) {
-                      temp[j] = musicalInformation[i]; j++;
-                    }
-                  }
-                  musicalInformation = [...temp];
-                  showPerformance(musicalInformation, musicalMarker);
-                }
-                else if(nowPerformenceBorderColor.style.borderColor=="rgb(250, 208, 201)") {
-                  for(let i = 0; i <operaInformation.length; i++) {
-                    if( operaInformation[i].op_st_dt <= today) {
-                      temp[j] = operaInformation[i]; j++;
-                    }
-                  }
-                  operaInformation = [...temp];
-                  showPerformance(operaInformation, operaMarker);
-                }
-                else if(nowPerformenceBorderColor.style.borderColor== "rgb(43, 174, 102)"){
-                  for(let i = 0; i <playInformation.length; i++) {
-                    if( playInformation[i].op_st_dt <= today) {
-                      temp[j] = playInformation[i]; j++;
-                    }
-                  }
-                  playInformation = [...temp];
-                  showPerformance(playInformation, playMarker);
-                }
-                dateDesignation.style.opacity = '0';
-                dateDesignation.style.visibility = 'hidden';
-                dataDesignation_send.style.opacity = '0';
-                dataDesignation_send.style.visibility = 'hidden';
-                dataDesignation_send.value ='     ';
-              }
-              else if(nowPlaying.className == 'true') {
-                nowPlaying.className ='false';
-                nowPlaying.style.backgroundColor = '#EAEAEA';
-                nowPlaying.style.transform="rotate(0deg)";
-
-                if(checkMusical.checked) {
-                  musicalInformation = [...tempMusicalInformation];
-                  showPerformance(musicalInformation, musicalMarker);
-                }
-                else if(checkOpera.checked) {
-                  operaInformation = [...tempOperaInformation];
-                  showPerformance(operaInformation, operaMarker);
-                }
-                else if(checkPlay.checked){
-                  playInformation = [...tempPlayInformation];
-                  showPerformance(playInformation, playMarker);
-                }
-                dateDesignation.style.opacity = '1';
-                dateDesignation.style.visibility = 'visible';
-                dataDesignation_send.style.opacity = '1';
-                dataDesignation_send.style.visibility = 'visible';
-                dataDesignation_send.value ='확인';
-              } 
-          }
-        }
-        //Playing.. 버튼 클릭이벤트
-        nowPlaying.onclick = function() {
-          sub_nowPlaying();
-        }
-
-        function sub_sub_dateDesignation_send() {
-          let j = 0;
-          let temp = [];
-          if(checkMusical.checked) {
-              for(let i = 0; i <musicalInformation.length; i++) {
-                if(musicalInformation[i].op_st_dt <= userInputDateValue && musicalInformation[i].op_ed_dt >= userInputDateValue) {
-                  temp[j] = musicalInformation[i]; j++;
-                }
-              }
-              musicalInformation = [...temp];
-              showPerformance(musicalInformation, musicalMarker);
-            }
-            else if(checkOpera.checked) {
-              for(let i = 0; i <operaInformation.length; i++) {
-                if(operaInformation[i].op_st_dt <= userInputDateValue && operaInformation[i].op_ed_dt >= userInputDateValue) {
-                  temp[j] = operaInformation[i]; j++;
-                }
-              }
-              operaInformation = [...temp];
-              showPerformance(operaInformation, operaMarker);
-            }
-            else if(checkPlay.checked){
-              for(let i = 0; i <playInformation.length; i++) {
-                 if(playInformation[i].op_st_dt <= userInputDateValue && playInformation[i].op_ed_dt >= userInputDateValue) {
-                  temp[j] = playInformation[i]; j++;
-                }
-              }
-              playInformation = [...temp];
-              showPerformance(playInformation, playMarker);
-          }
-        }
-        function sub_dataDesignation_send() {
-          let j = 0;
-          let temp = [];
-          if(dataDesignation_send.value == "확인") {
-              //현재 상형중인 공연만 보여주기
-              if(dataDesignation_send.className == 'false') {
-                dataDesignation_send.className ='true';
-                dataDesignation_send.style.backgroundColor = '#BCE55C';
-                dataDesignation_send.className ='true';
-                dateDesignation.style.backgroundColor = '#BCE55C';
-                nowPlaying.style.opacity = '0';
-                nowPlaying.style.visibility = 'hidden';
-                nowPlaying.firstChild.style.display = 'none';
-                
-                sub_sub_dateDesignation_send();
-              }
-              else if(dataDesignation_send.className == 'true') {
-                dataDesignation_send.className ='false';
-                dateDesignation.style.backgroundColor = '#EAEAEA';
-                dataDesignation_send.style.backgroundColor = '#EAEAEA';
-                nowPlaying.style.opacity = '1';
-                nowPlaying.style.visibility = 'visible';
-                nowPlaying.firstChild.style.display = 'block';
-
-                if(checkMusical.checked) {
-                  musicalInformation = [...tempMusicalInformation];
-                  showPerformance(musicalInformation, musicalMarker);
-                }
-                else if(checkOpera.checked) {
-                  operaInformation = [...tempOperaInformation];
-                  showPerformance(operaInformation, operaMarker);
-                }
-                else if(checkPlay.checked){
-                  playInformation = [...tempPlayInformation];
-                  showPerformance(playInformation, playMarker);
-                }
-                dateDesignation.style.opacity = '1';
-                dateDesignation.style.visibility = 'visible';
-                dataDesignation_send.style.opacity = '1';
-                dataDesignation_send.style.visibility = 'visible';
-                dataDesignation_send.value ='확인';
-              } 
-          }
-        }
-        
-        //날짜 입력 이벤트
-        dateDesignation.value = today;
-        dataDesignation_send.onclick = function() {
-          console.log('???'+dateDesignation);
-          userInputDateValue = dateDesignation.value;
-          sub_dataDesignation_send();
-        }
-       
-        
-        
-        
  </script>
+
  </body>
  </html>   
  
