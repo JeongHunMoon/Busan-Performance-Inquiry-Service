@@ -307,7 +307,8 @@
         const operaJson =   'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const playJson =    'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
         const place =       'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
-    
+        const themcode = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureThemeCodeService/getBusanCultureThemeCode?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&&resultType=json';
+
         var dataPane = document.getElementById("sample_data");
         var today = getToday(); //현재 날짜 yyyy-mm-dd 형태 반환
         var placeInformation= []; //공연장 장소 저장
@@ -320,6 +321,8 @@
         var tempMusicalInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
         var tempOperaInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
         var tempPlayInformation = []; //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정볼르 임시로 저장할 배열 변수
+        var themeCode = []; //테마코드 Json의 item객체 저장
+        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장
         var cilckMarker; //특정 위치 마커
         var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해줌
 
@@ -454,7 +457,6 @@
           }
 
         function detailScreenEventSet() {
-          
           //뮤지컬 상세보기 창 클릭시 이벤트
           performanceDetailInformation.onclick = function() {
             performanceDetailInformation_eventMethod();
@@ -573,7 +575,7 @@
 
         }
 
-        //검색결과가 같은지 반환
+      //검색결과가 같은지 반환
       //공연데이터에 포함된 공연장 이름과 카맵에서 검색한 장소 둘을 비교해주는함수
       function isSame(str1, str2) {
           //console.log("start")
@@ -636,6 +638,17 @@
 
           return isSame;
       }//show 배열에따라 마커추가
+      //매개변수 str에 해당하는 테마 코드가 테마코드 Json 에 존재하면 해당 테마코드의 문자열 반환해줌
+      function isTheme(tCode) {
+        for(let i = 0; i < themeCode.length; i++) {
+         
+          if(tCode == themeCode[i].theme) {
+            return themeCode[i].theme_nm;
+          }
+        }
+        return '';
+      }
+
         function showPerformance(performanceInfor, performaceMaker) {
           //-------------맵에 마커 출력---------------------------------------------------- 
           //기존 마커들 모두 제거
@@ -837,6 +850,20 @@
                     for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
                       var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
                       if( color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                       //1101,1001,1110 이와 같은 형태의 테마코드를 즐거움,슬픔,가족 이와 같은 문자열로 변환하기
+                       var splitTheme = performanceInfor[i].theme.split(","); //테마코드는 xxxx,xxxx,xxxx 이와 같은 형식으로 jsno에 존재함. 이를 토근으로 분해
+                       performanceThemeCode = []; //배열 초기화
+                       for(let p = 0; p<splitTheme.length; p++) {
+                         if(isTheme(splitTheme[p]) !='') {
+                           if(performanceThemeCode =='') {
+                            performanceThemeCode = isTheme(splitTheme[p]);
+                           }
+                           else {
+                            performanceThemeCode = performanceThemeCode + ", "+isTheme(splitTheme[p]);
+                           }
+                         }
+                       }
+                       
                         performanceDetailInformation.insertAdjacentHTML('beforeend', 
                       `<h4>Title: </h4>${performanceInfor[i].title}<br>
                         <h4>Date: </h4>${performanceInfor[i].op_st_dt} ~ ${performanceInfor[i].op_ed_dt}<br>
@@ -845,6 +872,7 @@
                         <h4>Showtime: </h4>${performanceInfor[i].showtime}<br>
                         <h4>Rating: </h4>${performanceInfor[i].rating}<br>
                         <h4>Price: </h4>${performanceInfor[i].price}<br>
+                        <h4>Theme: </h4>${performanceThemeCode}<br>
                         <h4>Casting: </h4>${performanceInfor[i].casting}<br>
                         <h4>Enterprise: </h4>${performanceInfor[i].enterprise}<br>
                         <h4>More Information And Reservation: </h4><a href = "${performanceInfor[i].dabom_url}" target="_blank">${performanceInfor[i].dabom_url}</a><br><br><br>
@@ -1026,6 +1054,18 @@
             }
             tempPlayInformation = [...playInformation];
         });
+
+        //테마코드 추출
+        fetch(themcode)
+        .then(res => res.json())
+        .then(resJson => {
+          var array = resJson.getBusanCultureThemeCode.item;
+          var totalCount = resJson.getBusanCultureThemeCode.totalCount;
+          for(let i = 0; i<totalCount; i++) {
+            themeCode[i] = array[i];
+          }
+        });
+
 
         //드롭다운 클릭시 이벤트 구현
         hiddenbutton.onclick = function() {

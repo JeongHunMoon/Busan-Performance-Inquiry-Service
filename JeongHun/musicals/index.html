@@ -11,7 +11,7 @@
  const Simplelist = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalService/getBusanCultureMusical?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
  const place = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
  const operaJson =   'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
-
+ const themcode = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureThemeCodeService/getBusanCultureThemeCode?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&&resultType=json';
  function getToday () {
     var date = new Date();
     var year = date.getFullYear();
@@ -43,7 +43,7 @@
  fetch(place)
  .then(res => res.json())
  .then(resJson => {
-    dataPane.innerText = JSON.stringify(resJson, null, 1);
+    //dataPane.innerText = JSON.stringify(resJson, null, 1);
      var center = resJson.getBusanCulturePerformPlace.item;
      var totalCount = resJson.getBusanCulturePerformPlace.totalCount;
      for(let i =0; i<totalCount; i++) {
@@ -55,7 +55,7 @@
  fetch(detail)
  .then(res => res.json())
  .then(resJson => {
- //dataPane.innerText = JSON.stringify(resJson, null, 1);
+ dataPane.innerText = JSON.stringify(resJson, null, 1);
  var musical = resJson.getBusanCultureMusicalDetail.item;
  var totalCount = resJson.getBusanCultureMusicalDetail.totalCount;
  for(let i = 0; i <totalCount; i++) {
@@ -78,6 +78,14 @@
         operaInformation[i] = array[i];
      }
  }
+ });
+
+ fetch(themcode)
+ .then(res => res.json())
+ .then(resJson => {
+ //dataPane.innerText = JSON.stringify(resJson, null, 1);
+ var array = resJson.getBusanCultureThemeCode.item;
+ var totalCount = resJson.getBusanCultureThemeCode.totalCount;
  });
 
 
