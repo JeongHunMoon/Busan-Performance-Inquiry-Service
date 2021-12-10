@@ -75,4 +75,4 @@ function isSame(str1, str2) {
   return isSame;
 }//show 배열에따라 마커추가
 console.log(keywordFilter("부산문화회관"));
-console.log(isSame("부산 부산문화회관", "부산문화회관"));
+console.log(isSame("MBC드림홀(구.MBC삼주아트홀)", "부산MBC 드림홀"));
