@@ -55,14 +55,14 @@
         padding-bottom : 0px;
         cursor:pointer;
         border-radius: 100%;
-        transition:all ease 1.5s;
-            box-shadow: 2px 2px 2px gray;
+        transition:all ease 1s;
+        box-shadow: 2px 2px 2px gray;
         background-color: #EAEAEA;
         text-align: center;
         font-weight: bold;
         font-size: 13px;
       }
-      #ButtonImage p {
+      #ButtonImage p, #nowPlaying p {
         margin-top:10px
       }
       
@@ -93,6 +93,7 @@
     }
  
     .test_obj input[type="radio"] + span {  
+        margin-left: 10px;
         width:98px;
         height: 20px;
         display: block;
@@ -115,9 +116,11 @@
       
 
       #hiddenList_content_ul {
+       display: none;
        opacity: 0;
        transition:all ease 0.5s;
        width: 98px;
+       font-weight: 500;
       }
 
       #main #main_section1 {
@@ -204,6 +207,40 @@
       #performanceDetailInformation:hover {
         background-color: #EAEAEA;
       }
+
+      #dateDesignation {
+        margin-top:3%;
+        margin-left: 10%;
+        cursor:pointer;
+        transition:all ease 1s;
+        box-shadow: 2px 2px 2px gray;
+        background-color: #EAEAEA;
+      }
+      #dataDesignation_send {
+        margin-top:3%;
+        cursor:pointer;
+        transition:all ease 1s;
+        box-shadow: 2px 2px 2px gray;
+        background-color: #EAEAEA;
+      }
+      #nowPlaying {
+        display: block;
+        width:40px;
+        height: 90%;
+        float:left ;
+        margin-top: 2px;
+        margin-left:8px;
+        margin-right : 5px;
+        padding-bottom : 0px;
+        cursor:pointer;
+        border-radius: 100%;
+        transition:all ease 1s;
+        box-shadow: 2px 2px 2px gray;
+        background-color: #EAEAEA;
+        text-align: center;
+        font-weight: bold;
+        font-size: 8px;
+      }
    </style>
  </head>
  <body>
@@ -224,6 +261,9 @@
    <div id = "background">
      <header id ="dropdown">
       <div id = "ButtonImage"><p>click</p></div>
+      <div class = "false" id ="nowPlaying" style = "width:40px;"><p style="display: block;">Playing..</p></div>
+      <input class = "false" id = "dateDesignation" type='date'>
+      <input class = "false" id = "dataDesignation_send" type ="submit" value="확인">
      </header>
      <main id = "main">
        <div id="loadingScreen"><p>Loading...</p></div>
@@ -232,10 +272,16 @@
             <li><label class="test_obj"><input id = "checkMusical" type="radio" name="radioButton" value="musical" checked><span>뮤지컬</span></label></li>
             <li><label class="test_obj"><input id = "checkOpera" type="radio" name="radioButton" value="opera"><span>오페라</span></label></li>
             <li><label class="test_obj"><input id = "checkPlay" type="radio" name="radioButton" value="play"><span>연극</span></label></li>
+            <li><label class="test_obj"><input id = "checkConcert" type="radio" name="radioButton" value="concert"><span>콘서트</span></label></li>
+            <li><label class="test_obj"><input id = "checkTraditionalArt" type="radio" name="radioButton" value="traditionalArt"><span>전통 예술</span></label></li>
+            <li><label class="test_obj"><input id = "checkClassic" type="radio" name="radioButton" value="classic"><span>클래식</span></label></li>
+            <li><label class="test_obj"><input id = "checkExhibition" type="radio" name="radioButton" value="exhibition"><span>전시</span></label></li>
+            <li><label class="test_obj"><input id = "checkDance" type="radio" name="radioButton" value="dance"><span>무용</span></label></li>
           </ul>
        </div>
        <section id = "main_section1">
-         <div id = "map"></div>
+         <div id = "map">
+         </div>
          <div id = "scrollBar">
             <ul id = "scrollBar_ul"></ul>
          </div>
@@ -262,11 +308,19 @@
 
    <script>
         //--------------------변수 및 메소드 선언-------------------
-        const musicalJson = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
-        const operaJson =   'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
-        const playJson =    'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+        const themcode =    'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureThemeCodeService/getBusanCultureThemeCode?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const place =       'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
-    
+
+        const musicalJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
+        const operaJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
+        const playJson =           'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+        const concertJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureConcertDetailService/getBusanCultureConcertDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+        const traditionalArtJson = 'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureTraditionDetailService/getBusanCultureTraditionDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+        const classicJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureClassicDetailService/getBusanCultureClassicDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
+        const exhibitionJson =     'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureExhibitDetailService/getBusanCultureExhibitDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&stdt=2021&pageNo=1&numOfRows=1000&resultType=json';
+        const danceJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureDanceDetailService/getBusanCultureDanceDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
+
+
         var dataPane = document.getElementById("sample_data");
         var today = getToday(); //현재 날짜 yyyy-mm-dd 형태 반환
         var placeInformation= []; //공연장 장소 저장
@@ -276,7 +330,31 @@
         var operaMarker = [];
         var playInformation = [];
         var playMarker = [];
+        var concertInformation = []; //콘서트 Json 정보 저장
+        var concertMarker = []; //콘서트 마커 저장
+        var traditionalArtInformation = []; //전통 예술 Json 정보 저장
+        var traditionalArtMarker = []; //전통 예술 마커 정보 저장
+        var classicInformation = []; //클래식 Json 정보 저장
+        var classicMarker = []; //클래식 마커 정보 저장
+        var exhibitionInformation = []; //전시 Json 정보 저장
+        var exhibitionMarker = []; //전시 마커 저장
+        var danceInformation = []; //무용 Json 정보 저장
+        var danceMarker = []; // 무용 마커 정보 저장 
+
+        //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정보를 임시로 저장할 배열 변수
+        var tempMusicalInformation = []; 
+        var tempOperaInformation = []; 
+        var tempPlayInformation = []; 
+        var tempConcertInformation = []; 
+        var tempTraditionalArtInformation  = []; 
+        var tempClassicInformation = []; 
+        var tempExhibitionInformation = [];
+        var tempDanceInformation = [];
+
+        var themeCode = []; //테마코드 Json의 item객체 저장
+        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장
         var cilckMarker; //특정 위치 마커
+        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해줌
 
         var scrollBar = document.querySelector('#scrollBar');
         var scrollBar_ul = document.querySelector('#scrollBar_ul');
@@ -289,20 +367,27 @@
         var checkMusical = document.querySelector('#checkMusical');
         var checkOpera = document.querySelector('#checkOpera');
         var checkPlay = document.querySelector('#checkPlay');
-        let hiddenbutton = document.getElementById('ButtonImage');
-        let hiddenList = document.getElementById('hiddenList');
-        let hiddenList_content = document.getElementById('hiddenList_content');
-        let hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
-        let ButtonImage = document.querySelector('#ButtonImage');
+        var checkConcert = document.querySelector('#checkConcert');
+        var checkTraditionalArt = document.querySelector('#checkTraditionalArt');
+        var checkClassic = document.querySelector('#checkClassic');
+        var checkExhibition = document.querySelector('#checkExhibition');
+        var checkDance = document.querySelector('#checkDance');
+        
+
+        var hiddenbutton = document.querySelector('#ButtonImage');
+        var hiddenList = document.getElementById('hiddenList');
+        var hiddenList_content = document.getElementById('hiddenList_content');
+        var hiddenList_content_ul = document.getElementById('hiddenList_content_ul');
+        var nowPlaying = document.querySelector('#nowPlaying');
+        var dateDesignation = document.querySelector('#dateDesignation');
+        var dataDesignation_send = document.querySelector('#dataDesignation_send');
+        var userInputDateValue;
         //footer 3가지 이벤트 등록
         var naviIcon = document.querySelector('#naviIcon');
         var mapIcon = document.querySelector('#mapIcon');
         var reservationIcon = document.querySelector('#reservationIcon');
         Kakao.init('3f5d2674c29eb3cb86007a28668890f6')
 
-
-      
-    
         var mapContainer = document.getElementById('map') // 지도를 표시할 div 
         var mapOption = {
             center: new kakao.maps.LatLng(35.13417, 129.11397), // 지도의 중심좌표
@@ -320,23 +405,93 @@
 
         function setMarkers(map) {
             if(checkMusical.checked) {
-              for (let i = 0; i < musicalMarker.length; i++) {
+              for (let i = 0; i < currentMakerLength; i++) {
                 musicalMarker[i].setMap(map);
               }  
             }
             else if(checkOpera.checked) {
-              for (let i = 0; i < operaMarker.length; i++) {
+              for (let i = 0; i < currentMakerLength; i++) {
                 operaMarker[i].setMap(map);
               }  
             }
             else if(checkPlay.checked) {
-              for (let i = 0; i < playMarker.length; i++) {
+              for (let i = 0; i < currentMakerLength; i++) {
                 playMarker[i].setMap(map);
               }  
-            }           
+            } 
+            else if(checkConcert.checked) {
+              for (let i = 0; i < currentMakerLength; i++) {
+                concertMarker[i].setMap(map);
+              }  
+            }
+            else if(checkTraditionalArt.checked) {
+              for (let i = 0; i < currentMakerLength; i++) {
+                traditionalArtMarker[i].setMap(map);
+              }  
+            }   
+            else if(checkClassic.checked) {
+              for (let i = 0; i < currentMakerLength; i++) {
+                classicMarker[i].setMap(map);
+              }  
+            }   
+            else if(checkExhibition.checked) {
+              for (let i = 0; i < currentMakerLength; i++) {
+                exhibitionMarker[i].setMap(map);
+              }  
+            }   
+            else if(checkDance.checked) {
+              for (let i = 0; i < currentMakerLength; i++) {
+                danceMarker[i].setMap(map);
+              }  
+            }             
+        }
+        function visibleHeaderElement(str) {
+          if(str == 'viewDateOnly') {
+            dateDesignation.style.opacity = '1';
+            dateDesignation.style.visibility = 'visible';
+            dataDesignation_send.style.opacity = '1';
+            dataDesignation_send.style.visibility = 'visible';
+            dataDesignation_send.value ='확인';
+          }
+          else if(str=='viewPlayingOnly') {
+            nowPlaying.style.opacity = '1';
+            nowPlaying.style.visibility = 'visible';
+            nowPlaying.firstChild.style.display = 'block';
+          }
+          else if(str =="ALL") {
+            nowPlaying.style.opacity = '1';
+            nowPlaying.style.visibility = 'visible';
+            nowPlaying.firstChild.style.display = 'block';
+            dateDesignation.style.opacity = '1';
+            dateDesignation.style.visibility = 'visible';
+            dataDesignation_send.style.opacity = '1';
+            dataDesignation_send.style.visibility = 'visible';
+            dataDesignation_send.value ='확인';
+          }
+        }
+
+        function hiddenHeaderElement() {
+          nowPlaying.style.opacity = '0';
+          nowPlaying.style.visibility = 'hidden';
+          nowPlaying.firstChild.style.display = 'none';
+          dateDesignation.style.opacity = '0';
+          dateDesignation.style.visibility = 'hidden';
+          dataDesignation_send.style.opacity = '0';
+          dataDesignation_send.style.visibility = 'hidden';
+          dataDesignation_send.value ='     ';
         }
 
         function performanceDetailInformation_eventMethod() {
+              if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
+                visibleHeaderElement('viewDateOnly');
+              }
+              else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
+                visibleHeaderElement('viewPlayingOnly');
+              }
+              else {
+                visibleHeaderElement('ALL');
+              }
+
             if(performanceDetailInformation.style.width=='100%') {
               naviIcon.style.backgroundColor = "#EAEAEA"
               mapIcon.style.backgroundColor = "#EAEAEA"
@@ -345,7 +500,9 @@
               //설명창 닫으면 li중 배경 색이 skyblue 이면 skyblue->#EAEAEA로 변경
               for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
                 var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
-                if(color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
+                || color == "rgb(242, 170, 76)" || color == "rgb(183, 46, 46)"   || color == "rgb(206, 212, 110)"
+                || color == "rgb(41, 171, 226)" || color == "rgb(93, 93, 93)") {
                   scrollBar_ul_childCount.children[i].style.backgroundColor = "#EAEAEA";
                   break;
                 }
@@ -361,49 +518,299 @@
           }
 
         function detailScreenEventSet() {
-          
           //뮤지컬 상세보기 창 클릭시 이벤트
           performanceDetailInformation.onclick = function() {
             performanceDetailInformation_eventMethod();
           }
         }
 
-        function checkBoxEvent_sub_content(performanJson, PerformanceInformation, performaceMaker) {   
-          sortDate(PerformanceInformation);
-          showPerformance(PerformanceInformation, performaceMaker);
+        function checkBoxEvent_sub_content(performanJson, PerformanceInformation, performaceMaker) {
+          let j = 0;
+          let temp = [];
+          //Playing...버튼을 누른채로 드롭다운 중 뮤지컬을 클릭했을 때 현제 시각 기준 상영하고 있는 뮤지컬 정보만 출력해줌
+          if(PerformanceInformation == musicalInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <musicalInformation.length; i++) {
+              if(musicalInformation[i].op_st_dt <= today) {
+                temp[j] = musicalInformation[i]; j++;
+              }
+            }
+            musicalInformation = [...temp];
+            showPerformance(musicalInformation, musicalMarker);
+          }  
+          else if(PerformanceInformation == operaInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <operaInformation.length; i++) {
+              if( operaInformation[i].op_st_dt <= today) {
+                temp[j] = operaInformation[i]; j++;
+              }
+            }
+            operaInformation = [...temp];
+            showPerformance(operaInformation, operaMarker);            
+          } 
+          else if(PerformanceInformation == playInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <playInformation.length; i++) {
+              if( playInformation[i].op_st_dt <= today) {
+                temp[j] = playInformation[i]; j++;
+              }
+            }
+            playInformation = [...temp];
+            showPerformance(playInformation, playMarker);
+          }  
+          else if(PerformanceInformation == concertInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <concertInformation.length; i++) {
+              if( concertInformation[i].op_st_dt <= today) {
+                temp[j] = concertInformation[i]; j++;
+              }
+            }
+            concertInformation = [...temp];
+            showPerformance(concertInformation, concertMarker);
+          } 
+          else if(PerformanceInformation == traditionalArtInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <traditionalArtInformation.length; i++) {
+              if( traditionalArtInformation[i].op_st_dt <= today) {
+                temp[j] = traditionalArtInformation[i]; j++;
+              }
+            }
+            traditionalArtInformation = [...temp];
+            showPerformance(traditionalArtInformation, traditionalArtMarker);
+          } 
+          else if(PerformanceInformation == classicInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <classicInformation.length; i++) {
+              if( classicInformation[i].op_st_dt <= today) {
+                temp[j] = classicInformation[i]; j++;
+              }
+            }
+            classicInformation = [...temp];
+            showPerformance(classicInformation, classicMarker);
+          } 
+          else if(PerformanceInformation == exhibitionInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <exhibitionInformation.length; i++) {
+              if( exhibitionInformation[i].op_st_dt <= today) {
+                temp[j] = exhibitionInformation[i]; j++;
+              }
+            }
+            exhibitionInformation = [...temp];
+            showPerformance(exhibitionInformation, exhibitionMarker);
+          } 
+          else if(PerformanceInformation == danceInformation && nowPlaying.className=='true') {
+            for(let i = 0; i <danceInformation.length; i++) {
+              if( danceInformation[i].op_st_dt <= today) {
+                temp[j] = danceInformation[i]; j++;
+              }
+            }
+            danceInformation = [...temp];
+            showPerformance(danceInformation, danceMarker);
+          } 
+          else if(dataDesignation_send.className=='true') {sub_sub_dateDesignation_send();} //사용자가 입력한 날짜 기준 공연 정보 출력하기
+          else {showPerformance(PerformanceInformation, performaceMaker);} //날짜 지정도 Playing.. 버튼도 둘 다 안 누른 경우
+          
               
-          ButtonImage.style.transform="rotate(0deg)";
+          hiddenbutton.style.transform="rotate(0deg)";
           hiddenList_content_ul.style.opacity = '0';
           hiddenList.style.width='0%';
+          hiddenList_content_ul.style.display = 'none';
+          if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
+              visibleHeaderElement('viewDateOnly');
+          }
+          else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
+            visibleHeaderElement('viewPlayingOnly');
+          }
+          else {
+            visibleHeaderElement('ALL');
+          }
          // hiddenList_content.style.width = '0px';
         }
 
         function checkBoxEvent() {
           checkMusical.onclick = function() {
             if(checkMusical.checked) {
+              musicalInformation = [...tempMusicalInformation]; //원본인 tempMusicalInformation의 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                    performanceDetailInformation_eventMethod();
+                checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
+                performanceDetailInformation_eventMethod();
               }
-              checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
+              else {
+                checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
+              }
+              
             }
           }
           checkOpera.onclick = function() {
             if(checkOpera.checked) {
+              operaInformation = [...tempOperaInformation]; //원본인 tempOperaInformation 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                    performanceDetailInformation_eventMethod();
+                checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
+                performanceDetailInformation_eventMethod();
               }
-              checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
+              else {
+                checkBoxEvent_sub_content(operaJson, operaInformation, operaMarker);
+              }
+              
             }
           }
           checkPlay.onclick = function() {
             if(checkPlay.checked) {
+              playInformation = [...tempPlayInformation]; //원본인 tempPlayInformation 값을 가져옴
               if(performanceDetailInformation.style.width == '100%') {
-                    performanceDetailInformation_eventMethod();
+                checkBoxEvent_sub_content(playJson, playInformation, playMarker);
+                performanceDetailInformation_eventMethod();
               }
-              checkBoxEvent_sub_content(playJson, playInformation, playMarker);
+              else {
+                checkBoxEvent_sub_content(playJson, playInformation, playMarker);
+              }
+              
+            }
+          }
+
+          checkConcert.onclick = function() {
+            if(checkConcert.checked) {
+              concertInformation = [...tempConcertInformation]; //원본인 tempPlayInformation 값을 가져옴
+              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+                checkBoxEvent_sub_content(playJson, concertInformation, concertMarker);
+                performanceDetailInformation_eventMethod();
+              }
+              else {
+                checkBoxEvent_sub_content(concertJson, concertInformation, concertMarker); 
+              }
+            }
+          }
+          checkTraditionalArt.onclick = function() {
+            if(checkTraditionalArt.checked) {
+              traditionalArtInformation = [...tempTraditionalArtInformation]; //원본인 tempPlayInformation 값을 가져옴
+              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+                checkBoxEvent_sub_content(traditionalArtJson, traditionalArtInformation, traditionalArtMarker);
+                performanceDetailInformation_eventMethod();
+              }
+              else {
+                checkBoxEvent_sub_content(traditionalArtJson, traditionalArtInformation, traditionalArtMarker); 
+              }
+            }
+          }
+          checkClassic.onclick = function() {
+            if(checkClassic.checked) {
+              classicInformation = [...tempClassicInformation]; //원본인 tempPlayInformation 값을 가져옴
+              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+                checkBoxEvent_sub_content(classicJson, classicInformation, classicMarker);
+                performanceDetailInformation_eventMethod();
+              }
+              else {
+                checkBoxEvent_sub_content(classicJson, classicInformation, classicMarker); 
+              }
+            }
+          }
+          checkExhibition.onclick = function() {
+            if(checkExhibition.checked) {
+              exhibitionInformation = [...tempExhibitionInformation]; //원본인 tempPlayInformation 값을 가져옴
+              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+                checkBoxEvent_sub_content(exhibitionJson, exhibitionInformation, exhibitionMarker);
+                performanceDetailInformation_eventMethod();
+              }
+              else {
+                checkBoxEvent_sub_content(exhibitionJson, exhibitionInformation, exhibitionMarker); 
+              }
+            }
+          }
+          checkDance.onclick = function() {
+            if(checkDance.checked) {
+              danceInformation = [...tempDanceInformation]; //원본인 tempPlayInformation 값을 가져옴
+              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+                checkBoxEvent_sub_content(danceJson, danceInformation, danceMarker);
+                performanceDetailInformation_eventMethod();
+              }
+              else {
+                checkBoxEvent_sub_content(danceJson, danceInformation, danceMarker); 
+              }
             }
           }
         }
+        //현재기능-괄호 앞 키워드까지만 검색
+        function keywordFilter(str) {
+            var arr = str.split('');//문자별로 분할
+            var indexNum;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] == '(' || arr[i] == '[') { //괄호 검색
+                    indexNum = i;//괄호의 인덱스 저장
+                }
+            }
+
+            var result = arr.join('');
+            result = result.substring(0, indexNum);//제일앞부터 괄호앞까지 자르기
+            return result; //스트링으로 변환하여 반환
+
+        }
+
+      //검색결과가 같은지 반환
+      //공연데이터에 포함된 공연장 이름과 카맵에서 검색한 장소 둘을 비교해주는함수
+      function isSame(str1, str2) {
+          //console.log("start")
+          var isSame = false;
+          //console.log("first "+str1+" "+str2)
+          if (str1 == str2) {//두 문자열이 완전 일치
+              isSame = true;
+          }
+          else {
+              var secondCompareStr1 = keywordFilter(str1).replace(/(\s*)/g, "");
+              var secondCompareStr2 = keywordFilter(str2).replace(/(\s*)/g, "");
+              //console.log("second "+secondCompareStr1+" "+secondCompareStr2);
+              if (secondCompareStr1 == secondCompareStr2) {//괄호와 공백을 제거한 두문자열의 일치
+                  isSame = true;
+              }
+              else {
+                  var noSpaceStr1 = str1.replace(/(\s*)/g, "");//공백제거
+                  var noSpaceStr2 = str2.replace(/(\s*)/g, "");
+                  var strArrS = noSpaceStr1.split('');//작은문자열(검사전)
+                  var strArrB = noSpaceStr2.split('');//큰문자열(검사전)
+                  if (strArrB.length < strArrS.length) {//검사하고 이름에맞게 맞춰줌
+                      var temp = strArrS;
+                      strArrS = strArrB;
+                      strArrB = temp;
+                  }
+                  //console.log("third "+strArrB+" "+strArrS);
+                  if (strArrB == strArrS) {//정제한 문자열이 같으면 true
+                      isSame = true;
+                  }
+                  else {
+                      for (var i = 0; i < strArrS.length; i++) {//큰문자열앞부터에 끝까지에 작은문자열이 포함되있는지 검사
+                          //console.log(strArrS);
+                          if (strArrS[i] != strArrB[i]) {//중간에 같지않으면 break하고 false값 반환
+                              //console.log("forth not Matched "+strArrS+" "+strArrB);
+                              isSame = false;
+                              var forthStr1 = keywordFilter(str1)//괄호및 공백제거
+                              forthStr1 = forthStr1.replace(/(\s*)/g, "");
+
+                              var forthStr2 = keywordFilter(str2)
+                              forthStr2 = forthStr2.replace(/(\s*)/g, "");
+
+                              forthStr1 = forthStr1.replace("부산", '');//부산 제거
+                              forthStr2 = forthStr2.replace("부산", '');
+                              //console.log("fifth "+forthStr1+" "+forthStr2);
+                              if (forthStr1 == forthStr2) {
+                                  isSame = true;
+                              }
+                              else {
+                                  //console.log("ended with no match")
+                                  isSame = false//분기의 마지막
+                              }
+                              break;
+                          } else {
+                              isSame = true;//for문이 도중에 멈추지않았다면 true
+                          }
+                      }
+                  }
+              }
+          }
+
+          return isSame;
+      }//show 배열에따라 마커추가
+      //매개변수 str에 해당하는 테마 코드가 테마코드 Json 에 존재하면 해당 테마코드의 문자열 반환해줌
+      function isTheme(tCode) {
+        for(let i = 0; i < themeCode.length; i++) {
+         
+          if(tCode == themeCode[i].theme) {
+            return themeCode[i].theme_nm;
+          }
+        }
+        return '';
+      }
 
         function showPerformance(performanceInfor, performaceMaker) {
           //-------------맵에 마커 출력---------------------------------------------------- 
@@ -411,12 +818,24 @@
           for (let i = 0; i < musicalMarker.length; i++)  musicalMarker[i].setMap(null);
           for (let i = 0; i < operaMarker.length; i++)  operaMarker[i].setMap(null);
           for (let i = 0; i < playMarker.length; i++)  playMarker[i].setMap(null);
+          for (let i = 0; i < concertMarker.length; i++)  concertMarker[i].setMap(null);
+          for (let i = 0; i < traditionalArtMarker.length; i++)  traditionalArtMarker[i].setMap(null);
+          for (let i = 0; i < classicMarker.length; i++)  classicMarker[i].setMap(null);
+          for (let i = 0; i < exhibitionMarker.length; i++)  exhibitionMarker[i].setMap(null);
+          for (let i = 0; i < danceMarker.length; i++)  danceMarker[i].setMap(null);
+
           for(let i =0 ; i<musicalMarker.length; i++) musicalMarker.pop();
           for(let i =0 ; i<operaMarker.length; i++) operaMarker.pop();
           for(let i =0 ; i<playMarker.length; i++) playMarker.pop();
+          for(let i =0 ; i<concertMarker.length; i++) concertMarker.pop();
+          for(let i =0 ; i<traditionalArtMarker.length; i++) traditionalArtMarker.pop();
+          for(let i =0 ; i<classicMarker.length; i++) classicMarker.pop();
+          for(let i =0 ; i<exhibitionMarker.length; i++) exhibitionMarker.pop();
+          for(let i =0 ; i<danceMarker.length; i++) danceMarker.pop();
 
           // 지도에 마커를 생성하고 표시한다
           let j;
+          currentMakerLength=0;
           for(let i=0; i < performanceInfor.length; i++) {
             var placeObject;
             for(j = 0; j < placeInformation.length; j++) {
@@ -430,6 +849,7 @@
               }
             }
             if(j == placeInformation.length) {
+             
               // 키워드 검색 완료 시 호출되는 콜백함수 입니다
               let placesSearchCB = function (data, status, pagination) {
                   if (status === kakao.maps.services.Status.OK) {
@@ -455,6 +875,11 @@
                   if(performanceInfor == musicalInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/purple.png';}
                   else if(performanceInfor == operaInformation){imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/pink.png';}
                   else if(performanceInfor == playInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/green.png';}
+                  else if(performanceInfor == concertInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/yellow.png';}
+                  else if(performanceInfor == traditionalArtInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/red.png';}
+                  else if(performanceInfor == classicInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/light_green.png';}
+                  else if(performanceInfor == exhibitionInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/skyblue.png';}
+                  else if(performanceInfor == danceInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/black.png';}
                   
                   var imageSize = new kakao.maps.Size(30,40);
                   var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -477,12 +902,10 @@
                   //kakao.maps.event.addListener(marker, "clickz", mouseOverListener(map, marker, infoWindow)); 
                   //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow))
                 
-                  performaceMaker.push(marker);  // 생성된 마커를 배열에 추가합니다
-                  
+                  performaceMaker[currentMakerLength] = marker;  // 생성된 마커를 배열에 추가합니다
+                  currentMakerLength++;
               }
-              ps.keywordSearch(performanceInfor[i].place_nm, placesSearchCB);   
-              // 마커 이벤트리스너 등록
-              
+              ps.keywordSearch("부산 "+keywordFilter(performanceInfor[i].place_nm), placesSearchCB);   
             }   
 
             else {
@@ -492,6 +915,11 @@
               if(performanceInfor == musicalInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/purple.png';}
               else if(performanceInfor == operaInformation){imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/pink.png';}
               else if(performanceInfor == playInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/green.png';}
+              else if(performanceInfor == concertInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/yellow.png';}
+              else if(performanceInfor == traditionalArtInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/red.png';}
+              else if(performanceInfor == classicInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/light_green.png';}
+              else if(performanceInfor == exhibitionInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/skyblue.png';}
+              else if(performanceInfor == danceInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/black.png';}
                   
               var imageSize = new kakao.maps.Size(30,40);
               var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -520,7 +948,8 @@
               //kakao.maps.event.addListener(marker, "click", mouseOverListener(map, marker, infoWindow)); 
               //kakao.maps.event.addListener(marker, "focusout", mouseOutListener(infoWindow));
               
-              performaceMaker.push(marker);  // 생성된 마커를 배열에 추가합니다
+              performaceMaker[currentMakerLength]=marker;  // 생성된 마커를 배열에 추가합니다
+              currentMakerLength++;
             }
           }
 
@@ -561,19 +990,41 @@
                 else if(performanceInfor==playInformation){
                   li.style.border = '2px solid #2bae66'
                 }
+                else if(performanceInfor==concertInformation){
+                  li.style.border = '2px solid #f2aa4c'
+                }
+                else if(performanceInfor==traditionalArtInformation){
+                  li.style.border = '2px solid #b72e2e'
+                }
+                else if(performanceInfor==classicInformation){
+                  li.style.border = '2px solid #ced46e'
+                }
+                else if(performanceInfor==exhibitionInformation){
+                  li.style.border = '2px solid #29abe2'
+                }
+                else if(performanceInfor==danceInformation){
+                  li.style.border = '2px solid #5D5D5D'
+                }
                 li.onclick = function(event) {
                   if(performanceDetailInformation.style.width == '100%') {
                     performanceDetailInformation_eventMethod();
+                    hiddenHeaderElement();
                   }
                   if(performanceDetailInformation.style.width == '0px' || performanceDetailInformation.style.width =="") {
-                  
+                    hiddenHeaderElement();
                     if(performanceInfor==musicalInformation) {event.target.style.backgroundColor = "#603f83";}
                     else if(performanceInfor == operaInformation){event.target.style.backgroundColor = "#fad0c9";}
                     else if(performanceInfor == playInformation) {event.target.style.backgroundColor = "#2bae66";}
+                    else if(performanceInfor == concertInformation) {event.target.style.backgroundColor = "#f2aa4c";}
+
+                    else if(performanceInfor == traditionalArtInformation) {event.target.style.backgroundColor = "#b72e2e";}
+                    else if(performanceInfor == classicInformation) {event.target.style.backgroundColor = "#ced46e";}
+                    else if(performanceInfor == exhibitionInformation) {event.target.style.backgroundColor = "#29abe2";}
+                    else if(performanceInfor == danceInformation) {event.target.style.backgroundColor = "#5D5D5D";}
                     
                     if( performanceInfor[i].lttd == "") {
                       hideMarkers();
-                      alert("장소를 조회할 수 없습니다. \n뮤지컬 정보만 표시합니다.");
+                      alert("장소를 조회할 수 없습니다. \r공연 정보만 표시합니다.");
                     }
                     else {
                       hideMarkers();
@@ -603,7 +1054,23 @@
                     /*여기다 뮤지컬 정보 표시*/
                     for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
                       var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
-                      if( color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                      if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
+                      || color == "rgb(242, 170, 76)" || color == "rgb(183, 46, 46)"   || color == "rgb(206, 212, 110)"
+                      || color == "rgb(41, 171, 226)" || color == "rgb(93, 93, 93)") {
+                       //1101,1001,1110 이와 같은 형태의 테마코드를 즐거움,슬픔,가족 이와 같은 문자열로 변환하기
+                       var splitTheme = performanceInfor[i].theme.split(","); //테마코드는 xxxx,xxxx,xxxx 이와 같은 형식으로 jsno에 존재함. 이를 토근으로 분해
+                       performanceThemeCode = []; //배열 초기화
+                       for(let p = 0; p<splitTheme.length; p++) {
+                         if(isTheme(splitTheme[p]) !='') {
+                           if(performanceThemeCode =='') {
+                            performanceThemeCode = isTheme(splitTheme[p]);
+                           }
+                           else {
+                            performanceThemeCode = performanceThemeCode + ", "+isTheme(splitTheme[p]);
+                           }
+                         }
+                       }
+                       
                         performanceDetailInformation.insertAdjacentHTML('beforeend', 
                       `<h4>Title: </h4>${performanceInfor[i].title}<br>
                         <h4>Date: </h4>${performanceInfor[i].op_st_dt} ~ ${performanceInfor[i].op_ed_dt}<br>
@@ -612,6 +1079,7 @@
                         <h4>Showtime: </h4>${performanceInfor[i].showtime}<br>
                         <h4>Rating: </h4>${performanceInfor[i].rating}<br>
                         <h4>Price: </h4>${performanceInfor[i].price}<br>
+                        <h4>Theme: </h4>${performanceThemeCode}<br>
                         <h4>Casting: </h4>${performanceInfor[i].casting}<br>
                         <h4>Enterprise: </h4>${performanceInfor[i].enterprise}<br>
                         <h4>More Information And Reservation: </h4><a href = "${performanceInfor[i].dabom_url}" target="_blank">${performanceInfor[i].dabom_url}</a><br><br><br>
@@ -627,7 +1095,9 @@
           naviIcon.onclick = function() {
             for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
               var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
-                if(color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
+                || color == "rgb(242, 170, 76)" || color == "rgb(183, 46, 46)"   || color == "rgb(206, 212, 110)"
+                || color == "rgb(41, 171, 226)" || color == "rgb(93, 93, 93)") {
                   if(performanceInfor[i].lttd == "") {
                     alert("장소를 조회할 수 없어 네비게이션으로 이동하지 않습니다.\n상세보기란에서 위치를 확인해주세요.");
                     return;
@@ -650,7 +1120,9 @@
           mapIcon.onclick = function() {
             for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
               var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
-                if(color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
+                || color == "rgb(242, 170, 76)" || color == "rgb(183, 46, 46)"   || color == "rgb(206, 212, 110)"
+                || color == "rgb(41, 171, 226)" || color == "rgb(93, 93, 93)") {
                   if(performanceInfor[i].lttd == "") {
                     alert("장소를 조회할 수 없어 카카오맵으로 이동하지 않습니다.\n상세보기란에서 위치를 확인해주세요.");
                     return;
@@ -669,7 +1141,9 @@
           reservationIcon.onclick = function() {
             for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
               var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
-                if(color == "rgb(96, 63, 131)" || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)") {
+                if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
+                || color == "rgb(242, 170, 76)" || color == "rgb(183, 46, 46)"   || color == "rgb(206, 212, 110)"
+                || color == "rgb(41, 171, 226)" || color == "rgb(93, 93, 93)") {
                   reservationIcon.style.backgroundColor = "#BCE55C"
                   window.open(performanceInfor[i].dabom_url);
                   return;
@@ -698,21 +1172,27 @@
             infoWindow.close();
           };
         }
-        
-        function sortDate(performanceInfor) {
-          //배열을 공연 날짜를 기준으로 오름차순 정렬
-          var temp;
-            for (let m = 0; m < performanceInfor.length - 1; m++) {
-              for (let n = 0; n < performanceInfor.length - 1 - m; n++){
-                  if (performanceInfor[n].op_ed_dt > performanceInfor[n + 1].op_ed_dt) {
-                      temp = performanceInfor[n];
-                      performanceInfor[n] = performanceInfor[n + 1];
-                      performanceInfor[n + 1] = temp;
-                  }
-              }
+        //매개변수로 전달된 json 공연 데이터를 정렬해주는 함수
+        function sortDate(arrData) {
+            for (var i = arrData.length - 1; i > 0; i--) {
+                for (var j = 0; j < i; j++) {
+                    if (arrData[j].op_ed_dt > arrData[j + 1].op_ed_dt) {
+                        var temp = arrData[j];
+                        arrData[j] = arrData[j + 1];
+                        arrData[j + 1] = temp;
+                    }
+                    else if (arrData[j].op_ed_dt == arrData[j + 1].op_ed_dt) {
+                        if (arrData[j].op_st_dt > arrData[j + 1].op_st_dt) {
+                            var temp = arrData[j];
+                            arrData[j] = arrData[j + 1];
+                            arrData[j + 1] = temp;
+                        }
+                    }
+                }
             }
+            return arrData;
         }
-
+        
         
         detailScreenEventSet();
         checkBoxEvent();
@@ -747,6 +1227,7 @@
             footer.style.display = 'block';
             headerTag.style.display='block'
             //전역 코드의 마지막으로 선언된 비동기 함수가 끝나면 로딩창 끄기
+            tempMusicalInformation = [...musicalInformation];
         });
 
         fetch(operaJson)
@@ -765,6 +1246,8 @@
                   j++;
                 }
             }
+            sortDate(operaInformation);
+            tempOperaInformation = [...operaInformation];
         });
 
         fetch(playJson)
@@ -783,27 +1266,175 @@
                   j++;
                 }
             }
+            sortDate(playInformation);
+            tempPlayInformation = [...playInformation];
         });
+
+        fetch(concertJson)
+        .then(res => res.json())
+        .then(resJson => {
+            var performance;
+            var totalCount;
+            performance = resJson.getBusanCultureConcertDetail.item;
+            totalCount = resJson.getBusanCultureConcertDetail.totalCount;
+            for(let i = 0; i<concertInformation.length; i++) concertInformation.pop();
+            let j = 0;
+            for(let i = 0; i < totalCount; i++) {
+                //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                if(performance[i].op_ed_dt >= today) {
+                  concertInformation[j] = performance[i];
+                  j++;
+                }
+            }
+            sortDate(concertInformation);
+            tempConcertInformation = [...concertInformation];
+        });
+
+        fetch(traditionalArtJson)
+        .then(res => res.json())
+        .then(resJson => {
+            var performance;
+            var totalCount;
+            performance = resJson.getBusanCultureTraditionDetail.item;
+            totalCount = resJson.getBusanCultureTraditionDetail.totalCount;
+            for(let i = 0; i<traditionalArtInformation.length; i++) traditionalArtInformation.pop();
+            let j = 0;
+            for(let i = 0; i < totalCount; i++) {
+                //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                if(performance[i].op_ed_dt >= today) {
+                  traditionalArtInformation[j] = performance[i];
+                  j++;
+                }
+            }
+            sortDate(traditionalArtInformation);
+            tempTraditionalArtInformation = [...traditionalArtInformation];
+        });
+
+        fetch(classicJson)
+        .then(res => res.json())
+        .then(resJson => {
+            var performance;
+            var totalCount;
+            performance = resJson.getBusanCultureClassicDetail.item;
+            totalCount = resJson.getBusanCultureClassicDetail.totalCount;
+            for(let i = 0; i<classicInformation.length; i++) classicInformation.pop();
+            let j = 0;
+            for(let i = 0; i < totalCount; i++) {
+                //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                if(performance[i].op_ed_dt >= today) {
+                  classicInformation[j] = performance[i];
+                  j++;
+                }
+            }
+            sortDate(classicInformation);
+            tempClassicInformation = [...classicInformation];
+        });
+
+        fetch(exhibitionJson)
+        .then(res => res.json())
+        .then(resJson => {
+            var performance;
+            var totalCount;
+            performance = resJson.getBusanCultureExhibitDetail.item;
+            totalCount = resJson.getBusanCultureExhibitDetail.totalCount;
+            for(let i = 0; i<exhibitionInformation.length; i++) exhibitionInformation.pop();
+            let j = 0;
+            for(let i = 0; i < totalCount; i++) {
+                //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                if(performance[i].op_ed_dt >= today) {
+                  exhibitionInformation[j] = performance[i];
+                  j++;
+                }
+            }
+            sortDate(exhibitionInformation);
+            tempExhibitionInformation = [...exhibitionInformation];
+        });
+
+        fetch(danceJson)
+        .then(res => res.json())
+        .then(resJson => {
+            var performance;
+            var totalCount;
+            performance = resJson.getBusanCultureDanceDetail.item;
+            totalCount = resJson.getBusanCultureDanceDetail.totalCount;
+            for(let i = 0; i<danceInformation.length; i++) danceInformation.pop();
+            let j = 0;
+            for(let i = 0; i < totalCount; i++) {
+                //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                if(performance[i].op_ed_dt >= today) {
+                  danceInformation[j] = performance[i];
+                  j++;
+                }
+            }
+            sortDate(danceInformation);
+            tempDanceInformation = [...danceInformation];
+        });
+
+
+        //테마코드 추출
+        fetch(themcode)
+        .then(res => res.json())
+        .then(resJson => {
+          var array = resJson.getBusanCultureThemeCode.item;
+          var totalCount = resJson.getBusanCultureThemeCode.totalCount;
+          for(let i = 0; i<totalCount; i++) {
+            themeCode[i] = array[i];
+          }
+        });
+
 
         //드롭다운 클릭시 이벤트 구현
         hiddenbutton.onclick = function() {
           if(hiddenList.style.width=="" || hiddenList.style.width=="0%") {
-            ButtonImage.style.transform="rotate(360deg)";
+            hiddenbutton.style.transform="rotate(360deg)";
             //hiddenList_content.style.width = '120px';
             hiddenList.style.width='100%';
-            setTimeout(()=>{hiddenList_content_ul.style.opacity = '1';}, 300);
+            setTimeout(()=>{hiddenList_content_ul.style.opacity = '1'}, 300);
+            hiddenList_content_ul.style.display = 'block';
+            hiddenHeaderElement();
             
           }
           else if(hiddenList.style.width=="100%" && hiddenList_content_ul.style.opacity == '1') {
-            ButtonImage.style.transform="rotate(0deg)";
+            hiddenbutton.style.transform="rotate(0deg)";
             hiddenList_content_ul.style.opacity = '0';
             hiddenList.style.width='0%';
+            hiddenList_content_ul.style.display = 'none'
+            if(performanceDetailInformation.style.width !='100%') {
+              if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
+                visibleHeaderElement('viewDateOnly');
+              }
+              else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
+                visibleHeaderElement('viewPlayingOnly');
+              }
+              else {
+                visibleHeaderElement('ALL');
+              }
+            }
+            
             //hiddenList_content.style.width = '0px';
           }
         }
- </script>
+  
+        function sub_nowPlaying() {
+          let j = 0;
+          let temp = [];
+          let nowPerformenceBorderColor = scrollBar_ul_childCount.children[0];
+          if(nowPlaying.firstChild.style.display == 'block') {
+              //현재 상형중인 공연만 보여주기
+              if(nowPlaying.className == 'false') {
+                console.log(nowPerformenceBorderColor.style.borderColor);
+                nowPlaying.className ='true';
+                nowPlaying.style.backgroundColor = '#BCE55C';
+                nowPlaying.style.transform="rotate(360deg)";
 
- </body>
- </html>   
- 
- 
+                if(nowPerformenceBorderColor == null) {
+                  musicalInformation = [...temp];
+                  showPerformance(musicalInformation, musicalMarker);
+                }
+                else if(nowPerformenceBorderColor.style.borderColor=="rgb(96, 63, 131)") {
+                  for(let i = 0; i <musicalInformation.length; i++) {
+                    if(musicalInformation[i].op_st_dt <= today) {
+                      temp[j] = musicalInformation[i]; j++;
+                    }
+                  }
+     
