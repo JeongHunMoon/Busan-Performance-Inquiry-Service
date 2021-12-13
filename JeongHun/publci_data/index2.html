@@ -25,12 +25,13 @@
         width: 100%;
         height: 120%;
         margin: 0 auto;
-        background-color: white;
+        background-color: #EAEAEA;
         text-align: center;
-        font-weight: bold;
-        font-size:30px;
+       
       }
-      #loadingScreen p{
+      #loadingPercent{
+        font-weight: 300;
+        font-size:20px;
         margin-top:80%;
       }
       #background {
@@ -194,19 +195,21 @@
         margin-right: 0px;
         border-radius: 20%;
         text-align: center;
-        background-color: #BCE55C;
+        background-color: #EAEAEA;
         box-shadow: 20px 20px 20px gray;
         transition:all ease 0.5s;
         font-size:15px;
+        font-weight: 900;
         letter-spacing:-0.5px;
       }
       #performanceDetailInformation h4 {
         margin-bottom: 5px;
         font-weight: bold;
       }
-      #performanceDetailInformation:hover {
-        background-color: #EAEAEA;
+      #performanceDetailInformation h5 {
+        margin-bottom: 5px;
       }
+      
 
       #dateDesignation {
         margin-top:3%;
@@ -244,20 +247,6 @@
    </style>
  </head>
  <body>
-  <!-- <script>
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    if (isMobile()) {
-        console.log("platform is mobile");
-        alert("모바일");
-        window.location.href = "./mobile.html"
-
-    } else {
-        alert("pc");
-        console.log("platform is pc");
-    }
-  </script> -->
    <div id = "background">
      <header id ="dropdown">
       <div id = "ButtonImage"><p>menu</p></div>
@@ -266,7 +255,9 @@
       <input class = "false" id = "dataDesignation_send" type ="submit" value="확인">
      </header>
      <main id = "main">
-       <div id="loadingScreen"><p>Loading...</p></div>
+       <div id="loadingScreen">
+         <p id="loadingPercent">waiting...</p> 
+       </div>
        <div id = "hiddenList">
           <ul id = "hiddenList_content_ul">
             <li><label class="test_obj"><input id = "checkMusical" type="radio" name="radioButton" value="musical" checked><span>뮤지컬</span></label></li>
@@ -286,7 +277,6 @@
             <ul id = "scrollBar_ul"></ul>
          </div>
          <div id = "performanceDetailInformation"></div>
-         <!-- <a href="#" onclick="navi();">click</a> -->
        </section>
       
      </main>
@@ -299,18 +289,18 @@
    
    <script type="text/javascript" src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=3f5d2674c29eb3cb86007a28668890f6&libraries=services"></script>
    <script type="text/javascript" src = "https://developers.kakao.com/sdk/js/kakao.js"></script>
-   <!-- <script type="text/javascript" src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=3f5d2674c29eb3cb86007a28668890f6&libraries=services&autoload=false"></script> -->
    <script>
-     //모바일 해상도 설정
+     //모바일 해상도 설정하는데 현재 사용자의 모바일 환경의 높이를 가져와 배경화면에 해당하는 div태그의 height를 설정.
       var background = document.querySelector('#background');
       background.style.height = `${screen.height}px`;
    </script>
 
    <script>
-        //--------------------변수 및 메소드 선언-------------------
+        //--------------------변수 선언-------------------
         const themcode =    'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureThemeCodeService/getBusanCultureThemeCode?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const place =       'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
 
+        //전체 8개의 공연이 있으며, 공연 8개의 Json정보를 가져오는 변수
         const musicalJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const operaJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const playJson =           'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
@@ -320,28 +310,27 @@
         const exhibitionJson =     'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureExhibitDetailService/getBusanCultureExhibitDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&stdt=2021&pageNo=1&numOfRows=1000&resultType=json';
         const danceJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureDanceDetailService/getBusanCultureDanceDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
 
-
-        var dataPane = document.getElementById("sample_data");
-        var today = getToday(); //현재 날짜 yyyy-mm-dd 형태 반환
-        var placeInformation= []; //공연장 장소 저장
-        var musicalInformation = [];
-        var musicalMarker = [];
-        var operaInformation = [];
-        var operaMarker = [];
-        var playInformation = [];
-        var playMarker = [];
-        var concertInformation = []; //콘서트 Json 정보 저장
-        var concertMarker = []; //콘서트 마커 저장
+        //xxxInformation 변수는 Json에서 공연 정보를 가져와 해당 객체를 배열화 함, xxxMarker 변수는 공연의 마커정보의 객체르 배열화 함.
+        var today = getToday();             //현재 날짜 yyyy-mm-dd 형태 반환
+        var placeInformation= [];           //공연장 장소 저장
+        var musicalInformation = [];         //뮤지컬 Json 정보 저장
+        var musicalMarker = [];             //뮤지컬 마커 정보 저장
+        var operaInformation = [];          //오페라 Josn 정보 저장
+        var operaMarker = [];               //오페라 마커 정보 저장
+        var playInformation = [];           //연극 Json 정보 저장
+        var playMarker = [];                //연극 마커 정보 저장
+        var concertInformation = [];        //콘서트 Json 정보 저장
+        var concertMarker = [];             //콘서트 마커 저장
         var traditionalArtInformation = []; //전통 예술 Json 정보 저장
-        var traditionalArtMarker = []; //전통 예술 마커 정보 저장
-        var classicInformation = []; //클래식 Json 정보 저장
-        var classicMarker = []; //클래식 마커 정보 저장
-        var exhibitionInformation = []; //전시 Json 정보 저장
-        var exhibitionMarker = []; //전시 마커 저장
-        var danceInformation = []; //무용 Json 정보 저장
-        var danceMarker = []; // 무용 마커 정보 저장 
+        var traditionalArtMarker = [];      //전통 예술 마커 정보 저장
+        var classicInformation = [];        //클래식 Json 정보 저장
+        var classicMarker = [];             //클래식 마커 정보 저장
+        var exhibitionInformation = [];     //전시 Json 정보 저장
+        var exhibitionMarker = [];          //전시 마커 저장
+        var danceInformation = [];          //무용 Json 정보 저장
+        var danceMarker = [];               //무용 마커 정보 저장 
 
-        //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정보를 임시로 저장할 배열 변수
+        //Header의 버튼인 Playing..버튼을 누르거나, 사용자 날짜 지정 버튼을 선택하면 XXXInformation에 담긴 정보들이 그에 알맞게 가공된다. XXXInformation의 원본을 저장하는 변수가 tempXXXInformatino이다. 
         var tempMusicalInformation = []; 
         var tempOperaInformation = []; 
         var tempPlayInformation = []; 
@@ -351,12 +340,13 @@
         var tempExhibitionInformation = [];
         var tempDanceInformation = [];
 
-        var themeCode = []; //테마코드 Json의 item객체 저장
-        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장
-        var cilckMarker; //특정 위치 마커
-        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해줌
+        var themeCode = []; //테마코드 Json의 item객체 저장해주는 배열
+        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장 테마 코드는 문자열로 "1234,5678,1123" 와 같이 4자리 정수가 콤마로 연결된 문자열이다. 예를 들어 테마코드 1234는 themeCode 객체에 담긴 Json정보에서 "즐거움" 이와 같이 매칭됨.
+        var cilckMarker; //사용자가 공연 하나를 클릭하면 현재 사용자 눈에 보이는 마커들을 모두 지우고 클릭한 공연의 위치를 나타내는 마커만 지도에 띄움
+        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해주는 변수
         var infowArray = [] //infoWindow를 담을 객체 선언
 
+        //-------------html의 DOM요소의 객체를 가져오는 부분---------------
         var scrollBar = document.querySelector('#scrollBar');
         var scrollBar_ul = document.querySelector('#scrollBar_ul');
         var idMainTag = document.querySelector('#main');
@@ -382,31 +372,34 @@
         var nowPlaying = document.querySelector('#nowPlaying');
         var dateDesignation = document.querySelector('#dateDesignation');
         var dataDesignation_send = document.querySelector('#dataDesignation_send');
+        var loadingScreen = document.querySelector('#loadingScreen');
+        var loadingPercent = document.querySelector('#loadingPercent'); 
         var userInputDateValue;
-        //footer 3가지 이벤트 등록
+        
         var naviIcon = document.querySelector('#naviIcon');
         var mapIcon = document.querySelector('#mapIcon');
         var reservationIcon = document.querySelector('#reservationIcon');
-        Kakao.init('3f5d2674c29eb3cb86007a28668890f6')
+       //-------------html의 DOM요소의 객체를 가져오는 부분---------------
 
-        var mapContainer = document.getElementById('map') // 지도를 표시할 div 
+        Kakao.init('3f5d2674c29eb3cb86007a28668890f6');//kakao developer에서 발급받은 JavaScript key의 값을 init하여 Kakao API를 사용할 수 있다 
+
+        var mapContainer = document.getElementById('map');
+        //화면에 보여질 지도의 Option을 설정하는 단계
         var mapOption = {
             center: new kakao.maps.LatLng(35.13417, 129.11397), // 지도의 중심좌표
               level: 7, // 지도의 확대 레벨
               mapTypeId : kakao.maps.MapTypeId.ROADMAP,
         }; 
         
-        // 지도를 생성한다 
+        // 지도를 생성하여 화면에 띄운다. 
         var map = new kakao.maps.Map(mapContainer, mapOption); 
         var ps = new kakao.maps.services.Places();
 
-        function infowEvent(infoWindow) {
-          infoWindow.close()
-        }
-        function showMarkers() {
-            setMarkers(map)    
-        }  
+        function infowEvent(infoWindow) {infoWindow.close()}
+        function showMarkers() {setMarkers(map)}  
 
+        //이 함수는 화면에 마커들을 on/off 해주는 함수로 매개변수로 map이라고 지정하면 on이며 null로 지정하면 off이다. 
+        //현재 드롭다운체 check된 공연이 무엇인지 확인하여 if문으로 해당 공연의 마커들을 담고 있는 XXXMarker객체의 setMap함수를 호출하여 마커를 띄워준다. 
         function setMarkers(map) {
             if(checkMusical.checked) {
               for (let i = 0; i < currentMakerLength; i++) {
@@ -449,6 +442,39 @@
               }  
             }             
         }
+
+        //공연 하나에 해당하는 정보들은 다봄이라는 예매 사이트와 1대1로 매칭된다. 이 다봄 사이트에 있는 공연 이미지를 크롤링하여 가져오는 함수이다. 
+        //공연 하나의 정보 객체에는 해당 공연의 다봄 사이트의 URL 프로퍼티를 가진다. 첫 매개변수는 공연 하나의 다봄 URL을 전달한다.
+        //두 번째 매개변수는 xxxInformation 객체를 전달하여 8개의 공연중 하나를 전달한다. 
+        function getImgUrl(dabomUrl, performanceInformation) {
+          const proxy = 'https://busan-show.herokuapp.com/';
+          var request = new XMLHttpRequest();
+          request.open("GET", proxy + dabomUrl);
+          request.responseType = "document";
+          request.onload = function () {
+            if (request.readyState === 4) {
+              if (request.status === 200) {
+                var imgElement = request.responseXML.querySelector("div.leftbox>img");
+                var imgUrl = imgElement.src;
+                var splitUrl = imgUrl.split('/')
+                imgUrl = 'http://busandabom.net/images/contents/' + splitUrl[5]
+                if (splitUrl[5] == "noimg_classic.jpg") {
+                  imgUrl = 'http://busandabom.net/img/content/' + splitUrl[5]
+                }
+                ////////////////////////////
+                console.log(imgUrl)
+                /////////////////////////////
+              } else {
+                console.error(request.status, request.statusText);
+              }
+            }
+          };
+          request.onerror = function (e) {
+            console.error(request.status, request.statusText);
+          };
+          request.send(null);  // not a POST request, so don't send extra data
+        }
+
         function visibleHeaderElement(str) {
           if(str == 'viewDateOnly') {
             dateDesignation.style.opacity = '1';
@@ -993,6 +1019,7 @@
                 li.style.boxShadow = '5px 5px 5px gray';
                 li.style.borderRadius = "10px";
                 li.style.fontWeight= 'bold';
+                
                 if(performanceInfor==musicalInformation) {
                   li.style.border = '2px solid #603f83'
                 }
@@ -1018,7 +1045,10 @@
                   li.style.border = '2px solid #5D5D5D'
                 }
                 li.onclick = function(event) {
+                 
                   for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
+                  //다봄 홈페이지에서 사용자가 클릭한 공연 img 가져오기
+                
                   if(performanceDetailInformation.style.width == '100%') {
                     performanceDetailInformation_eventMethod();
                     hiddenHeaderElement();
@@ -1070,6 +1100,8 @@
                     idMain_section1Tag.style.height = '70%'; ///100%->65%
                     performanceDetailInformation.style.width = '100%';
                     performanceDetailInformation.style.height = '250px';  
+                   // performanceDetailInformation.style.backgroundImage = `url(${performanceInfor[i].image})`;
+                    //performanceDetailInformation.style.backgroundSize ='100% 100%';
 
                     /*여기다 뮤지컬 정보 표시*/
                     for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
@@ -1092,7 +1124,8 @@
                        }
                        
                         performanceDetailInformation.insertAdjacentHTML('beforeend', 
-                      `<h4>Title: </h4>${(performanceInfor[i].title)? performanceInfor[i].title:"-"}<br>
+                      `${(performanceInfor[i].image)? `<img src =${performanceInfor[i].image} width= "100%" height="300px" style="display:block;borderRadius:100%;"><br>` : `<h5>image is loading.<h5><h5>Please Click it again later.</h5><br><br>`}
+                        <h4>Title: </h4>${(performanceInfor[i].title)? performanceInfor[i].title:"-"}<br>
                         <h4>Date: </h4>${(performanceInfor[i].op_st_dt)? performanceInfor[i].op_st_dt:"-"} ~ ${(performanceInfor[i].op_ed_dt)? performanceInfor[i].op_ed_dt:"-"}<br>
                         <h4>Location: </h4>${(performanceInfor[i].place_nm)? performanceInfor[i].place_nm:"-"}<br>
                         <h4>Runtime: </h4>${(performanceInfor[i].runtime)? performanceInfor[i].runtime:"-"}<br>
@@ -1242,165 +1275,171 @@
             
             sortDate(musicalInformation);
             showPerformance(musicalInformation, musicalMarker);
-            var loadingScreen = document.querySelector('#loadingScreen');
-            loadingScreen.style.display='none';
-            footer.style.display = 'block';
-            headerTag.style.display='block'
             //전역 코드의 마지막으로 선언된 비동기 함수가 끝나면 로딩창 끄기
             tempMusicalInformation = [...musicalInformation];
-        });
+            setPerformance_Information_Image(musicalInformation, "뮤지컬");
 
-        fetch(operaJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureOperaDetail.item;
-            totalCount = resJson.getBusanCultureOperaDetail.totalCount;
-            for(let i = 0; i<operaInformation.length; i++) operaInformation.pop();
-              let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                   operaInformation[j] = performance[i];
-                  j++;
+            fetch(operaJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureOperaDetail.item;
+                totalCount = resJson.getBusanCultureOperaDetail.totalCount;
+                for(let i = 0; i<operaInformation.length; i++) operaInformation.pop();
+                  let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      operaInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(operaInformation);
-            tempOperaInformation = [...operaInformation];
-        });
+                sortDate(operaInformation);
+                tempOperaInformation = [...operaInformation];
+                setPerformance_Information_Image(operaInformation, "오페라");
+            });
 
-        fetch(playJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCulturePlayDetail.item;
-            totalCount = resJson.getBusanCulturePlayDetail.totalCount;
-            for(let i = 0; i<playInformation.length; i++) playInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  playInformation[j] = performance[i];
-                  j++;
+            fetch(playJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCulturePlayDetail.item;
+                totalCount = resJson.getBusanCulturePlayDetail.totalCount;
+                for(let i = 0; i<playInformation.length; i++) playInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      playInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(playInformation);
-            tempPlayInformation = [...playInformation];
-        });
+                sortDate(playInformation);
+                tempPlayInformation = [...playInformation];
+                setPerformance_Information_Image(playInformation, "연극");
+            });
 
-        fetch(concertJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureConcertDetail.item;
-            totalCount = resJson.getBusanCultureConcertDetail.totalCount;
-            for(let i = 0; i<concertInformation.length; i++) concertInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  concertInformation[j] = performance[i];
-                  j++;
+            fetch(concertJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureConcertDetail.item;
+                totalCount = resJson.getBusanCultureConcertDetail.totalCount;
+                for(let i = 0; i<concertInformation.length; i++) concertInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      concertInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(concertInformation);
-            tempConcertInformation = [...concertInformation];
-        });
+                sortDate(concertInformation);
+                tempConcertInformation = [...concertInformation];
+                setPerformance_Information_Image(concertInformation, "콘서트");
+            });
 
-        fetch(traditionalArtJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureTraditionDetail.item;
-            totalCount = resJson.getBusanCultureTraditionDetail.totalCount;
-            for(let i = 0; i<traditionalArtInformation.length; i++) traditionalArtInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  traditionalArtInformation[j] = performance[i];
-                  j++;
+            fetch(traditionalArtJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureTraditionDetail.item;
+                totalCount = resJson.getBusanCultureTraditionDetail.totalCount;
+                for(let i = 0; i<traditionalArtInformation.length; i++) traditionalArtInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      traditionalArtInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(traditionalArtInformation);
-            tempTraditionalArtInformation = [...traditionalArtInformation];
-        });
+                sortDate(traditionalArtInformation);
+                tempTraditionalArtInformation = [...traditionalArtInformation];
+                setPerformance_Information_Image(traditionalArtInformation, "전통 무용");
+            });
 
-        fetch(classicJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureClassicDetail.item;
-            totalCount = resJson.getBusanCultureClassicDetail.totalCount;
-            for(let i = 0; i<classicInformation.length; i++) classicInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  classicInformation[j] = performance[i];
-                  j++;
+            fetch(classicJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureClassicDetail.item;
+                totalCount = resJson.getBusanCultureClassicDetail.totalCount;
+                for(let i = 0; i<classicInformation.length; i++) classicInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      classicInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(classicInformation);
-            tempClassicInformation = [...classicInformation];
-        });
+                sortDate(classicInformation);
+                tempClassicInformation = [...classicInformation];
+                setPerformance_Information_Image(classicInformation, "클래식");
+            });
 
-        fetch(exhibitionJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureExhibitDetail.item;
-            totalCount = resJson.getBusanCultureExhibitDetail.totalCount;
-            for(let i = 0; i<exhibitionInformation.length; i++) exhibitionInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  exhibitionInformation[j] = performance[i];
-                  j++;
+            fetch(exhibitionJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureExhibitDetail.item;
+                totalCount = resJson.getBusanCultureExhibitDetail.totalCount;
+                for(let i = 0; i<exhibitionInformation.length; i++) exhibitionInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      exhibitionInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(exhibitionInformation);
-            tempExhibitionInformation = [...exhibitionInformation];
-        });
+                sortDate(exhibitionInformation);
+                tempExhibitionInformation = [...exhibitionInformation];
+                setPerformance_Information_Image(exhibitionInformation, "전시");
+            });
 
-        fetch(danceJson)
-        .then(res => res.json())
-        .then(resJson => {
-            var performance;
-            var totalCount;
-            performance = resJson.getBusanCultureDanceDetail.item;
-            totalCount = resJson.getBusanCultureDanceDetail.totalCount;
-            for(let i = 0; i<danceInformation.length; i++) danceInformation.pop();
-            let j = 0;
-            for(let i = 0; i < totalCount; i++) {
-                //현재 시각 기준 공연 예정인 뮤지컬만 추출
-                if(performance[i].op_ed_dt >= today) {
-                  danceInformation[j] = performance[i];
-                  j++;
+            fetch(danceJson)
+            .then(res => res.json())
+            .then(resJson => {
+                var performance;
+                var totalCount;
+                performance = resJson.getBusanCultureDanceDetail.item;
+                totalCount = resJson.getBusanCultureDanceDetail.totalCount;
+                for(let i = 0; i<danceInformation.length; i++) danceInformation.pop();
+                let j = 0;
+                for(let i = 0; i < totalCount; i++) {
+                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    if(performance[i].op_ed_dt >= today) {
+                      danceInformation[j] = performance[i];
+                      j++;
+                    }
                 }
-            }
-            sortDate(danceInformation);
-            tempDanceInformation = [...danceInformation];
-        });
+                sortDate(danceInformation);
+                tempDanceInformation = [...danceInformation];
+                setPerformance_Information_Image(danceInformation, "무용");
+            });
 
 
-        //테마코드 추출
-        fetch(themcode)
-        .then(res => res.json())
-        .then(resJson => {
-          var array = resJson.getBusanCultureThemeCode.item;
-          var totalCount = resJson.getBusanCultureThemeCode.totalCount;
-          for(let i = 0; i<totalCount; i++) {
-            themeCode[i] = array[i];
-          }
+            //테마코드 추출
+            fetch(themcode)
+            .then(res => res.json())
+            .then(resJson => {
+              var array = resJson.getBusanCultureThemeCode.item;
+              var totalCount = resJson.getBusanCultureThemeCode.totalCount;
+              for(let i = 0; i<totalCount; i++) {
+                themeCode[i] = array[i];
+              }
+            });
         });
+
+        
 
 
         //드롭다운 클릭시 이벤트 구현
@@ -1722,6 +1761,60 @@
               } 
           }
         }
+
+        function caller_setPerformance_Information_Image(performanceInformation, len, InformationString) {
+            const proxy = 'https://busan-show.herokuapp.com/';
+            var request = new XMLHttpRequest();
+            request.open("GET", proxy + performanceInformation.dabom_url);
+            request.responseType = "document";
+            request.onload = function () {
+              if (request.readyState === 4) {
+                if (request.status === 200) {
+                  var imgElement = request.responseXML.querySelector("div.leftbox>img");
+                  var imgUrl = imgElement.src;
+                  var splitUrl = imgUrl.split('/')
+                  imgUrl = 'http://busandabom.net/images/contents/' + splitUrl[5]
+                  if (splitUrl[5] == "noimg_classic.jpg") {
+                    imgUrl = 'http://busandabom.net/img/content/' + splitUrl[5]
+                  }
+                  ////////////////////////////
+                  performanceInformation.image = imgUrl;
+                  loadginEnd(InformationString, len);
+                  /////////////////////////////
+                } else {
+                  console.error(request.status, request.statusText);
+                }
+              }
+            };
+            request.onerror = function (e) {
+              console.error(request.status, request.statusText);
+            };
+            request.send(null);  // not a POST request, so don't send extra data
+            console.log(length+1==musicalInformation.length);
+            console.log(InformationString==="뮤지컬");
+           
+            //6개 공연중 처음으로 뮤지컬을 fetch하는데 뮤지컬 공연 정보 배열 요소에 image의 삽입이 모두 끝나면 호출되는 함수로 이때 로딩창 이미지를 꺼준다.
+            
+        }
+
+        function setPerformance_Information_Image(performanceInformation, InformationString) {
+          for(let i=0; i < performanceInformation.length; i++) {
+            caller_setPerformance_Information_Image(performanceInformation[i], i, InformationString);
+          }
+        }
+
+        //앱 접속시 로딩창이 뜨고 로딩이 끝나면 로딩창을 꺼주는 함수
+        function loadginEnd(InformationString, len) {
+          loadingPercent.textContent=`Loading Images ${parseInt((len/musicalInformation.length)*100)}%`;
+          if(InformationString==="뮤지컬" && ((len +1)==musicalInformation.length)) {
+            console.log('이미지 로딩 끝');
+            loadingScreen.style.display='none';
+            footer.style.display = 'block';
+            headerTag.style.display='block';
+          }
+          
+        }
+        
         
         //날짜 입력 이벤트
         dateDesignation.value = today;
@@ -1730,10 +1823,6 @@
           userInputDateValue = dateDesignation.value;
           sub_dataDesignation_send();
         }
-       
-        
-        
-        
  </script>
  </body>
  </html>   
