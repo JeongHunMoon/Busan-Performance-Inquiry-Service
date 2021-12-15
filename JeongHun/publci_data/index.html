@@ -322,7 +322,8 @@
         const classicJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureClassicDetailService/getBusanCultureClassicDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const exhibitionJson =     'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureExhibitDetailService/getBusanCultureExhibitDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&stdt=2021&pageNo=1&numOfRows=1000&resultType=json';
         const danceJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureDanceDetailService/getBusanCultureDanceDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
-
+        const parkJson =           'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+       
         //xxxInformation 변수는 Json에서 공연 정보를 가져와 해당 객체를 배열화 함, xxxMarker 변수는 공연의 마커정보의 객체르 배열화 함.
         var today = getToday();             //현재 날짜 yyyy-mm-dd 형태 반환
         var placeInformation= [];           //공연장 장소 저장
@@ -343,6 +344,10 @@
         var danceInformation = [];          //무용 Json 정보 저장
         var danceMarker = [];               //무용 마커 정보 저장 
 
+        var totalPark = []; //주차장 Json에서 가져온 객체를 모두 저장하는 배열
+        var clickPark = []; //사용자가 클릭한 공연(ex 뮤지컬 노트르담)을 기준으로 1km반경 내에 보여줄 주차장 객체 저장할 배열
+        var clickParkMarker = []; //사용자가 클릭한 공연(ex 뮤지컬 노트르담)을 기준으로 1km반경 내에 보여줄 주차장의 마커 저장 배열 
+        
         //Header의 버튼인 Playing..버튼을 누르거나, 사용자 날짜 지정 버튼을 선택하면 XXXInformation에 담긴 정보들이 그에 알맞게 가공된다. XXXInformation의 원본을 저장하는 변수가 tempXXXInformatino이다. 
         var tempMusicalInformation = []; 
         var tempOperaInformation = []; 
@@ -358,6 +363,7 @@
         var cilckMarker; //사용자가 공연 하나를 클릭하면 현재 사용자 눈에 보이는 마커들을 모두 지우고 클릭한 공연의 위치를 나타내는 마커만 지도에 띄움
         var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해주는 변수
         var infowArray = [] //infoWindow를 담을 객체 선언
+
 
         //-------------html의 DOM요소의 객체를 가져오는 부분---------------
         var scrollBar = document.querySelector('#scrollBar');
@@ -456,6 +462,19 @@
             }             
         }
 
+        //두좌표를 km으로 반환
+        function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) { 
+          function deg2rad(deg) { return deg * (Math.PI / 180) } 
+          var R = 6371; // Radius of the earth in km 
+          var dLat = deg2rad(lat2-lat1); // deg2rad below 
+          var dLon = deg2rad(lng2-lng1); 
+          var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          var d = R * c; // Distance in km 
+          return d; 
+        }
+       
+
         //Header에는 Playing.. 버튼과 사용자 날짜 지정 두 버튼이 존재한다. 이 둘은 서로 베타적인 관계로 하나가 on이면 하나는 off이어야한다.
         //만약 Playing 버튼이 on이라면 날짜 지정 버튼은 누를 수 없도록 사용자 눈에서 사라진다. 
         //또한 공연(ex 뮤지컬 중 노트르담) 하나를 클릭하면 상세 보기창이 뜨는데 그때 상단의 두 버튼은 상세 버튼을 끄기 전까지 사라지게 된다.
@@ -498,6 +517,7 @@
 
         //이 함수는 detailScreenEventSet함수 내부에서 실행되는 callee로 공연의 세부 정보창을 클릭했을 때 발생하는 이벤트의 내용이다. 
         function performanceDetailInformation_eventMethod() {
+              
               for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();} //infoWindow.close()를 통해 현재 화면에서 사용자가 마커를 클릭하여 공연장이름이 화면에 떠 있는것을 모두 지워준다. 
               if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
                 visibleHeaderElement('viewDateOnly');//Header의 playing 버튼과 날짜 버튼 중 날짜 버튼이 on된 경우 날짜 버튼만 보여지게 한다. 
@@ -511,7 +531,7 @@
 
             //상세창이 열려있는 경우 클릭했을 때만 실행되도록 if문으로 감싼다. 상세창이 열려있을 때 다시 누르면 상세창이 꺼지고, 사용자가 클릭한 공연(ex 뮤지컬의 노트르담)의 배경색이 다시 원래대로 돌아오며
             //화면에 다 지워졌던 마커들이 다시 보여져야한다. 
-            if(performanceDetailInformation.style.width=='100%') {
+            if(performanceDetailInformation.style.width=='100%') {          
               naviIcon.style.backgroundColor = "#EAEAEA"
               mapIcon.style.backgroundColor = "#EAEAEA"
               reservationIcon.style.backgroundColor = "#EAEAEA"
@@ -528,6 +548,7 @@
               }
               showMarkers();
               cilckMarker.setMap(null);
+              for(let a = 0; a<clickParkMarker.length; a++) clickParkMarker[a].setMap(null) //주차장 마커 초기화
               performanceDetailInformation.style.width = '0px';
               performanceDetailInformation.style.height = '0px';
               idMainTag.style.height = '85%'; //원래 크기 복구
@@ -903,7 +924,7 @@
             //만약 매칭이 공연(ex 뮤지컬 노트르담)에 해당하는 공연장이 공연장 Json에 매칭이 안된 경우 카카오맵의 '키워드 검색'을 한다. 
             if(j == placeInformation.length) {
               // 키워드 검색 완료 시 호출되는 콜백함수
-              let placesSearchCB = function (data, status, pagination) {
+                 function placesSearchCB (data, status, pagination) {
                   if (status === kakao.maps.services.Status.OK) {
                       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
                       // LatLngBounds 객체에 좌표를 추가합니다
@@ -1043,7 +1064,26 @@
                   li.style.border = '2px solid #5D5D5D'
                 }
                 li.onclick = function(event) {
+                  let c = 0; 
+                  console.log('================================');
+                  clickPark = [];
+                  for(let a = 0; a<clickParkMarker.length; a++) clickParkMarker[a].setMap(null);
+                  clickParkMarker = []; //주차장 마커 초기화
                   for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
+                  
+                  //사용자가 클릭한 공연을 원점으로 1km내의 공영 주차장을 가져옴
+                  for(let a = 0; a<totalPark.length; a++) {
+                    if(performanceInfor[i].lttd != "") {
+                      //현재 공연장을 중심으로 반경 1km내에 있는 경우
+                      if(getDistanceFromLatLonInKm(performanceInfor[i].lttd ,performanceInfor[i].lngt, totalPark[a].lttd, totalPark[a].lngt) <= 1) {
+                        clickPark[c] = totalPark[a];
+                        c++;
+                      }
+                    }
+                  }
+                  console.log("현재 클릭한 공연 근처 1km 반경 내의 주차장 개수: "+clickPark.length);
+                  
+
                   //사용자가 공연(ex 뮤지컬 노트르담)하나를 클릭해서 이미 상세창이 뜬 상태에서 다른 li 공연을 클릭 한 경우
                   if(performanceDetailInformation.style.width == '100%') {
                     performanceDetailInformation_eventMethod();
@@ -1068,9 +1108,10 @@
                     }
                     else {
                       hideMarkers();
-                      var clickMarkerImage = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 공연(ex 뮤지컬 노트르담)하나를 클릭하면 하나의 공연의 마커 이미지
-                      imageSize = new kakao.maps.Size(40, 50), // 마커이미지의 크기입니다
-                      imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                      var clickMarkerImage = 'https://mpv990422.duckdns.org/imgs/markerImg/selMarker.gif', // 공연(ex 뮤지컬 노트르담)하나를 클릭하면 하나의 공연의 마커 이미지
+                      clickMarkerParkImage = 'https://mpv990422.duckdns.org/imgs/markerImg/parkMarker.png';
+                      imageSize = new kakao.maps.Size(80, 80), // 마커이미지의 크기입니다
+                      imageOption = {offset: new kakao.maps.Point(40, 80)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
                       // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다.
 
                       let markerImage = new kakao.maps.MarkerImage(clickMarkerImage, imageSize, imageOption),
@@ -1082,15 +1123,30 @@
                           image: markerImage // 마커이미지 설정 
                       });
 
-                      cilckMarker.setMap(map);
-                      setFocusCenter(performanceInfor[i].lttd, performanceInfor[i].lngt);
-
                       var infoWindow = new kakao.maps.InfoWindow({
                         content: `${performanceInfor[i].place_nm}`,
                       });
                       infowArray.push(infoWindow);
                       kakao.maps.event.addListener(cilckMarker, "click", function(){infoWindow.open(map, cilckMarker)}); 
                       kakao.maps.event.addListener(map, "click", function(){infoWindow.close()});
+
+                      //주차장 마커 화면에 표시
+                      for(let i =0; i < clickPark.length;i++) {
+                        let parkImageSize = new kakao.maps.Size(30, 40); // 마커이미지의 크기입니다
+                        let parkImage = new kakao.maps.MarkerImage(clickMarkerParkImage, parkImageSize, imageOption);
+                        let parkPosition = new kakao.maps.LatLng(clickPark[i].lttd, clickPark[i].lngt); // 마커가 표시될 위치입니다
+
+                        // 마커를 생성합니다
+                        let ParkMarker = new kakao.maps.Marker({
+                            position: parkPosition, 
+                            image: parkImage // 마커이미지 설정 
+                        });
+                        clickParkMarker[i] = ParkMarker;
+                        clickParkMarker[i].setMap(map);
+                      }
+                      //주차장 마커 표시가 끝나면 클릭한 공연장 마커 표시
+                      cilckMarker.setMap(map);
+                      setFocusCenter(performanceInfor[i].lttd, performanceInfor[i].lngt);
                     }
 
                     idMainTag.style.height = '115%'; ///80%->115%
@@ -1423,6 +1479,31 @@
               var totalCount = resJson.getBusanCultureThemeCode.totalCount;
               for(let i = 0; i<totalCount; i++) {
                 themeCode[i] = array[i];
+              }
+            });
+
+            //부산 공영 주차장 Json 추출
+            fetch(parkJson)
+            .then(res => res.json())
+            .then(resJson => {
+              var array = resJson.getPblcPrkngInfo.item;
+              var totalCount = resJson.getPblcPrkngInfo.totalCount;
+              for(let i = 0; i<totalCount; i++) {
+                totalPark[i] = array[i];
+
+                //주차장 Json에서 주차장 가져오기
+                function parkSearch(data, status, pagination) {
+                  if (status === kakao.maps.services.Status.OK) {
+                    totalPark[i].lttd = data[0].y;
+                    totalPark[i].lngt = data[0].x;
+                  }
+                  else {
+                    totalPark[i].lttd ="";
+                  }
+                }
+                //카카오 맵에서 "부산 + 공연장명 + 주차장"으로 검색한 결과도 추가하여 반영하기
+                ps.keywordSearch(totalPark[i].jibunAddr, parkSearch);
+               
               }
             });
         });
