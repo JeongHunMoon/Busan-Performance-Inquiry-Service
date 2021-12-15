@@ -32,7 +32,15 @@
       #loadingPercent{
         font-weight: 300;
         font-size:20px;
-        margin-top:80%;
+        margin-top:5%;
+      }
+
+      #loadingImage {
+        width: 100px;
+        height: 100px;
+        display: block;
+        margin: 0 auto;
+        margin-top: 50%;
       }
       #background {
         width: 90%;
@@ -195,12 +203,16 @@
         margin-right: 0px;
         border-radius: 20%;
         text-align: center;
-        background-color: #EAEAEA;
+        background-color: #BCE55C;
         box-shadow: 20px 20px 20px gray;
         transition:all ease 0.5s;
         font-size:15px;
         font-weight: 900;
         letter-spacing:-0.5px;
+      }
+
+      #performanceDetailInformation:hover{
+        background-color: #EAEAEA;
       }
       #performanceDetailInformation h4 {
         margin-bottom: 5px;
@@ -242,34 +254,21 @@
         background-color: #EAEAEA;
         text-align: center;
         font-weight: bold;
-        font-size: 8px;
+        font-size: 9px;
       }
    </style>
  </head>
  <body>
-  <!-- <script>
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    if (isMobile()) {
-        console.log("platform is mobile");
-        alert("모바일");
-        window.location.href = "./mobile.html"
-
-    } else {
-        alert("pc");
-        console.log("platform is pc");
-    }
-  </script> -->
    <div id = "background">
      <header id ="dropdown">
       <div id = "ButtonImage"><p>menu</p></div>
-      <div class = "false" id ="nowPlaying" style = "width:40px;"><p style="display: block;">Playing..</p></div>
+      <div class = "false" id ="nowPlaying" style = "width:40px;"><p style="display: block; margin-top:12px">Playing..</p></div>
       <input class = "false" id = "dateDesignation" type='date'>
       <input class = "false" id = "dataDesignation_send" type ="submit" value="확인">
      </header>
      <main id = "main">
        <div id="loadingScreen">
+         <img id = "loadingImage" src = "http://mpv990422.duckdns.org/imgs/Spinner.gif">
          <p id="loadingPercent">waiting...</p> 
        </div>
        <div id = "hiddenList">
@@ -291,7 +290,6 @@
             <ul id = "scrollBar_ul"></ul>
          </div>
          <div id = "performanceDetailInformation"></div>
-         <!-- <a href="#" onclick="navi();">click</a> -->
        </section>
       
      </main>
@@ -304,18 +302,18 @@
    
    <script type="text/javascript" src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=3f5d2674c29eb3cb86007a28668890f6&libraries=services"></script>
    <script type="text/javascript" src = "https://developers.kakao.com/sdk/js/kakao.js"></script>
-   <!-- <script type="text/javascript" src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=3f5d2674c29eb3cb86007a28668890f6&libraries=services&autoload=false"></script> -->
    <script>
-     //모바일 해상도 설정
+     //모바일 해상도 설정하는데 현재 사용자의 모바일 환경의 높이를 가져와 배경화면에 해당하는 div태그의 height를 설정.
       var background = document.querySelector('#background');
       background.style.height = `${screen.height}px`;
    </script>
 
    <script>
-        //--------------------변수 및 메소드 선언-------------------
+        //--------------------변수 선언-------------------
         const themcode =    'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureThemeCodeService/getBusanCultureThemeCode?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const place =       'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePerformPlaceService/getBusanCulturePerformPlace?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
 
+        //전체 8개의 공연이 있으며, 공연 8개의 Json정보를 가져오는 변수
         const musicalJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureMusicalDetailService/getBusanCultureMusicalDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const operaJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureOperaDetailService/getBusanCultureOperaDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const playJson =           'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
@@ -324,29 +322,33 @@
         const classicJson =        'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureClassicDetailService/getBusanCultureClassicDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
         const exhibitionJson =     'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureExhibitDetailService/getBusanCultureExhibitDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&stdt=2021&pageNo=1&numOfRows=1000&resultType=json';
         const danceJson =          'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanCultureDanceDetailService/getBusanCultureDanceDetail?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json';
-
-
-        var dataPane = document.getElementById("sample_data");
-        var today = getToday(); //현재 날짜 yyyy-mm-dd 형태 반환
-        var placeInformation= []; //공연장 장소 저장
-        var musicalInformation = [];
-        var musicalMarker = [];
-        var operaInformation = [];
-        var operaMarker = [];
-        var playInformation = [];
-        var playMarker = [];
-        var concertInformation = []; //콘서트 Json 정보 저장
-        var concertMarker = []; //콘서트 마커 저장
+        const parkJson =           'https://moonjeonghunapp1.herokuapp.com/http://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=5WFmQsUZpTifa4SpNtPI1z1RqC721HbHHo937DJt9NYV1lr50bhm15x7cpREJ14DSBtNtOm5C3Oz0CFckeUeAA%3D%3D&pageNo=1&numOfRows=1000&resultType=json'
+       
+        //xxxInformation 변수는 Json에서 공연 정보를 가져와 해당 객체를 배열화 함, xxxMarker 변수는 공연의 마커정보의 객체르 배열화 함.
+        var today = getToday();             //현재 날짜 yyyy-mm-dd 형태 반환
+        var placeInformation= [];           //공연장 장소 저장
+        var musicalInformation = [];         //뮤지컬 Json 정보 저장
+        var musicalMarker = [];             //뮤지컬 마커 정보 저장
+        var operaInformation = [];          //오페라 Josn 정보 저장
+        var operaMarker = [];               //오페라 마커 정보 저장
+        var playInformation = [];           //연극 Json 정보 저장
+        var playMarker = [];                //연극 마커 정보 저장
+        var concertInformation = [];        //콘서트 Json 정보 저장
+        var concertMarker = [];             //콘서트 마커 저장
         var traditionalArtInformation = []; //전통 예술 Json 정보 저장
-        var traditionalArtMarker = []; //전통 예술 마커 정보 저장
-        var classicInformation = []; //클래식 Json 정보 저장
-        var classicMarker = []; //클래식 마커 정보 저장
-        var exhibitionInformation = []; //전시 Json 정보 저장
-        var exhibitionMarker = []; //전시 마커 저장
-        var danceInformation = []; //무용 Json 정보 저장
-        var danceMarker = []; // 무용 마커 정보 저장 
+        var traditionalArtMarker = [];      //전통 예술 마커 정보 저장
+        var classicInformation = [];        //클래식 Json 정보 저장
+        var classicMarker = [];             //클래식 마커 정보 저장
+        var exhibitionInformation = [];     //전시 Json 정보 저장
+        var exhibitionMarker = [];          //전시 마커 저장
+        var danceInformation = [];          //무용 Json 정보 저장
+        var danceMarker = [];               //무용 마커 정보 저장 
 
-        //현재 상영중인 공연 보여줄 때 현재 화면에 출력된 공연 정보를 임시로 저장할 배열 변수
+        var totalPark = []; //주차장 Json에서 가져온 객체를 모두 저장하는 배열
+        var clickPark = []; //사용자가 클릭한 공연(ex 뮤지컬 노트르담)을 기준으로 1km반경 내에 보여줄 주차장 객체 저장할 배열
+        var clickParkMarker = []; //사용자가 클릭한 공연(ex 뮤지컬 노트르담)을 기준으로 1km반경 내에 보여줄 주차장의 마커 저장 배열 
+        
+        //Header의 버튼인 Playing..버튼을 누르거나, 사용자 날짜 지정 버튼을 선택하면 XXXInformation에 담긴 정보들이 그에 알맞게 가공된다. XXXInformation의 원본을 저장하는 변수가 tempXXXInformatino이다. 
         var tempMusicalInformation = []; 
         var tempOperaInformation = []; 
         var tempPlayInformation = []; 
@@ -356,12 +358,14 @@
         var tempExhibitionInformation = [];
         var tempDanceInformation = [];
 
-        var themeCode = []; //테마코드 Json의 item객체 저장
-        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장
-        var cilckMarker; //특정 위치 마커
-        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해줌
+        var themeCode = []; //테마코드 Json의 item객체 저장해주는 배열
+        var performanceThemeCode= []; //현재 사용자가 클릭한 공연의 테마 코드 저장 테마 코드는 문자열로 "1234,5678,1123" 와 같이 4자리 정수가 콤마로 연결된 문자열이다. 예를 들어 테마코드 1234는 themeCode 객체에 담긴 Json정보에서 "즐거움" 이와 같이 매칭됨.
+        var cilckMarker; //사용자가 공연 하나를 클릭하면 현재 사용자 눈에 보이는 마커들을 모두 지우고 클릭한 공연의 위치를 나타내는 마커만 지도에 띄움
+        var currentMakerLength=0; //현재 화면에 보이는 마커의 개수를 저장해주는 변수
         var infowArray = [] //infoWindow를 담을 객체 선언
 
+
+        //-------------html의 DOM요소의 객체를 가져오는 부분---------------
         var scrollBar = document.querySelector('#scrollBar');
         var scrollBar_ul = document.querySelector('#scrollBar_ul');
         var idMainTag = document.querySelector('#main');
@@ -390,30 +394,31 @@
         var loadingScreen = document.querySelector('#loadingScreen');
         var loadingPercent = document.querySelector('#loadingPercent'); 
         var userInputDateValue;
-        //footer 3가지 이벤트 등록
+        
         var naviIcon = document.querySelector('#naviIcon');
         var mapIcon = document.querySelector('#mapIcon');
         var reservationIcon = document.querySelector('#reservationIcon');
-        Kakao.init('3f5d2674c29eb3cb86007a28668890f6')
+       //-------------html의 DOM요소의 객체를 가져오는 부분---------------
 
-        var mapContainer = document.getElementById('map') // 지도를 표시할 div 
+        Kakao.init('3f5d2674c29eb3cb86007a28668890f6');//kakao developer에서 발급받은 JavaScript key의 값을 init하여 Kakao API를 사용할 수 있다 
+
+        var mapContainer = document.getElementById('map');
+        //화면에 보여질 지도의 Option을 설정하는 단계
         var mapOption = {
             center: new kakao.maps.LatLng(35.13417, 129.11397), // 지도의 중심좌표
               level: 7, // 지도의 확대 레벨
               mapTypeId : kakao.maps.MapTypeId.ROADMAP,
         }; 
         
-        // 지도를 생성한다 
+        // 지도를 생성하여 화면에 띄운다. 
         var map = new kakao.maps.Map(mapContainer, mapOption); 
         var ps = new kakao.maps.services.Places();
 
-        function infowEvent(infoWindow) {
-          infoWindow.close()
-        }
-        function showMarkers() {
-            setMarkers(map)    
-        }  
+        function infowEvent(infoWindow) {infoWindow.close()}
+        function showMarkers() {setMarkers(map)}  
 
+        //이 함수는 화면에 마커들을 on/off 해주는 함수로 매개변수로 map이라고 지정하면 on이며 null로 지정하면 off이다. 
+        //현재 드롭다운체 check된 공연이 무엇인지 확인하여 if문으로 해당 공연의 마커들을 담고 있는 XXXMarker객체의 setMap함수를 호출하여 마커를 띄워준다. 
         function setMarkers(map) {
             if(checkMusical.checked) {
               for (let i = 0; i < currentMakerLength; i++) {
@@ -457,36 +462,23 @@
             }             
         }
 
-        //포스트 이미지 url 반환 함수
-        function getImgUrl(dabomUrl, performanceInformation) {//다봄 url삽입
-          const proxy = 'https://busan-show.herokuapp.com/';
-          var request = new XMLHttpRequest();
-          request.open("GET", proxy + dabomUrl);
-          request.responseType = "document";
-          request.onload = function () {
-            if (request.readyState === 4) {
-              if (request.status === 200) {
-                var imgElement = request.responseXML.querySelector("div.leftbox>img");
-                var imgUrl = imgElement.src;
-                var splitUrl = imgUrl.split('/')
-                imgUrl = 'http://busandabom.net/images/contents/' + splitUrl[5]
-                if (splitUrl[5] == "noimg_classic.jpg") {
-                  imgUrl = 'http://busandabom.net/img/content/' + splitUrl[5]
-                }
-                ////////////////////////////
-                console.log(imgUrl)
-                /////////////////////////////
-              } else {
-                console.error(request.status, request.statusText);
-              }
-            }
-          };
-          request.onerror = function (e) {
-            console.error(request.status, request.statusText);
-          };
-          request.send(null);  // not a POST request, so don't send extra data
+        //두좌표를 km으로 반환
+        function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) { 
+          function deg2rad(deg) { return deg * (Math.PI / 180) } 
+          var R = 6371; // Radius of the earth in km 
+          var dLat = deg2rad(lat2-lat1); // deg2rad below 
+          var dLon = deg2rad(lng2-lng1); 
+          var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          var d = R * c; // Distance in km 
+          return d; 
         }
+       
 
+        //Header에는 Playing.. 버튼과 사용자 날짜 지정 두 버튼이 존재한다. 이 둘은 서로 베타적인 관계로 하나가 on이면 하나는 off이어야한다.
+        //만약 Playing 버튼이 on이라면 날짜 지정 버튼은 누를 수 없도록 사용자 눈에서 사라진다. 
+        //또한 공연(ex 뮤지컬 중 노트르담) 하나를 클릭하면 상세 보기창이 뜨는데 그때 상단의 두 버튼은 상세 버튼을 끄기 전까지 사라지게 된다.
+        //이 처럼 여러 상황에서 Header의 두 버튼이 사라지고 보이고를 해야하는데 이를 수행해주는 함수가 visibleHeaderElement와 hiddenHeaderElement 함수이다. 
         function visibleHeaderElement(str) {
           if(str == 'viewDateOnly') {
             dateDesignation.style.opacity = '1';
@@ -523,19 +515,23 @@
           dataDesignation_send.value ='     ';
         }
 
+        //이 함수는 detailScreenEventSet함수 내부에서 실행되는 callee로 공연의 세부 정보창을 클릭했을 때 발생하는 이벤트의 내용이다. 
         function performanceDetailInformation_eventMethod() {
-              for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();} //infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
+              
+              for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();} //infoWindow.close()를 통해 현재 화면에서 사용자가 마커를 클릭하여 공연장이름이 화면에 떠 있는것을 모두 지워준다. 
               if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewDateOnly');
+                visibleHeaderElement('viewDateOnly');//Header의 playing 버튼과 날짜 버튼 중 날짜 버튼이 on된 경우 날짜 버튼만 보여지게 한다. 
               }
               else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
-                visibleHeaderElement('viewPlayingOnly');
+                visibleHeaderElement('viewPlayingOnly');//Header의 playing 버튼과 날짜 버튼 중 playing 버튼이 on된 경우 playing 버튼만 보여지게 한다. 
               }
               else {
-                visibleHeaderElement('ALL');
+                visibleHeaderElement('ALL'); // 둘다 off인 경우 둘다 화면에 보여지게 한다. 
               }
 
-            if(performanceDetailInformation.style.width=='100%') {
+            //상세창이 열려있는 경우 클릭했을 때만 실행되도록 if문으로 감싼다. 상세창이 열려있을 때 다시 누르면 상세창이 꺼지고, 사용자가 클릭한 공연(ex 뮤지컬의 노트르담)의 배경색이 다시 원래대로 돌아오며
+            //화면에 다 지워졌던 마커들이 다시 보여져야한다. 
+            if(performanceDetailInformation.style.width=='100%') {          
               naviIcon.style.backgroundColor = "#EAEAEA"
               mapIcon.style.backgroundColor = "#EAEAEA"
               reservationIcon.style.backgroundColor = "#EAEAEA"
@@ -552,6 +548,7 @@
               }
               showMarkers();
               cilckMarker.setMap(null);
+              for(let a = 0; a<clickParkMarker.length; a++) clickParkMarker[a].setMap(null) //주차장 마커 초기화
               performanceDetailInformation.style.width = '0px';
               performanceDetailInformation.style.height = '0px';
               idMainTag.style.height = '85%'; //원래 크기 복구
@@ -567,6 +564,8 @@
           }
         }
 
+        //checkBoxEvent메소드에서 호출되는 callee이다.
+        //checkBoxEvent메소드드는 드롭다운에서 8개의 공연중 하나를 클릭했을 때 발생하는 이벤트로 checkBoxEvent_sub_content메소드는 그 일부의 실행 내용이다. 
         function checkBoxEvent_sub_content(performanJson, PerformanceInformation, performaceMaker) {
           let j = 0;
           let temp = [];
@@ -589,6 +588,7 @@
             operaInformation = [...temp];
             showPerformance(operaInformation, operaMarker);            
           } 
+          
           else if(PerformanceInformation == playInformation && nowPlaying.className=='true') {
             for(let i = 0; i <playInformation.length; i++) {
               if( playInformation[i].op_st_dt <= today) {
@@ -643,34 +643,41 @@
             danceInformation = [...temp];
             showPerformance(danceInformation, danceMarker);
           } 
-          else if(dataDesignation_send.className=='true') {sub_sub_dateDesignation_send();} //사용자가 입력한 날짜 기준 공연 정보 출력하기
-          else {showPerformance(PerformanceInformation, performaceMaker);} //날짜 지정도 Playing.. 버튼도 둘 다 안 누른 경우
+          //Playing..버튼이 off이고 사용자 날자 지정 버튼이 on인 경우 드롭다운에서 8개의 공연중 선택하여 변경해도 그대로 사용자가 지정한 날짜에 따라 출력되야한다. 
+          else if(dataDesignation_send.className=='true') {callee_callee_dateDesignation_send();} 
+          //날짜 지정 버튼,  Playing.. 버튼 둘 다 안 누른 경우 8개의 공연중 하나를 클릭하면 해당 공연의 모든 공연(ex 뮤지컬의 노트르담 등..)이 화면에 출력된다. 
+          else {showPerformance(PerformanceInformation, performaceMaker);} 
           
-              
+          //드롭다운에서 8개의 공연중 하나를 클릭했으면 드롭다운 메뉴를 닫아주고 Header의 버튼을 화면에 보이게 해준다. 
           hiddenbutton.style.transform="rotate(0deg)";
           hiddenList_content_ul.style.opacity = '0';
           hiddenList.style.width='0%';
           hiddenList_content_ul.style.display = 'none';
+          //드롭다운 메뉴를 닫아주고 Header의 버튼을 화면에 보이게 해주는데 사용자가 드롭다운을 클릭하기전 사용자 날짜 지정 버튼만 on된 경우 이 버튼만 화면에 보이게 한다.
           if(dataDesignation_send.style.backgroundColor =='rgb(188, 229, 92)') {
               visibleHeaderElement('viewDateOnly');
           }
+          //드롭다운 메뉴를 닫아주고 Header의 버튼을 화면에 보이게 해주는데 사용자가 드롭다운을 클릭하기전 Playing.. 버튼만 on된 경우 이 버튼만 화면에 보이게 한다.
           else if(nowPlaying.style.backgroundColor =='rgb(188, 229, 92)') {
             visibleHeaderElement('viewPlayingOnly');
           }
+          //드롭다운 메뉴를 닫아주고 Header의 버튼을 화면에 보이게 해주는데 사용자가 드롭다운을 클릭하기전 두 버튼 다 off된 경우 두 버튼 모두 화면에 보이게 한다.
           else {
             visibleHeaderElement('ALL');
           }
-         // hiddenList_content.style.width = '0px';
         }
 
+        //이 메소드내부에서는 8개의 공연 버튼을 클릭할 때 발생하는 이벤트를 등록해주는 메소드이다.
         function checkBoxEvent() {
           checkMusical.onclick = function() {
             if(checkMusical.checked) {
               musicalInformation = [...tempMusicalInformation]; //원본인 tempMusicalInformation의 값을 가져옴
+              //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 8개의 공연중 하나를 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
               if(performanceDetailInformation.style.width == '100%') {
                 checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
                 performanceDetailInformation_eventMethod();
               }
+              //만약 상세보기 창이 닫힌 상태에서 드롭다운에서 8개 공연 중 하나를 클리하면 그냥 checkBoxEvent_sub_content 함수를 바로 호출.
               else {
                 checkBoxEvent_sub_content(musicalJson, musicalInformation, musicalMarker);
               }
@@ -707,7 +714,7 @@
           checkConcert.onclick = function() {
             if(checkConcert.checked) {
               concertInformation = [...tempConcertInformation]; //원본인 tempPlayInformation 값을 가져옴
-              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+              if(performanceDetailInformation.style.width == '100%') { 
                 checkBoxEvent_sub_content(playJson, concertInformation, concertMarker);
                 performanceDetailInformation_eventMethod();
               }
@@ -719,7 +726,7 @@
           checkTraditionalArt.onclick = function() {
             if(checkTraditionalArt.checked) {
               traditionalArtInformation = [...tempTraditionalArtInformation]; //원본인 tempPlayInformation 값을 가져옴
-              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+              if(performanceDetailInformation.style.width == '100%') { 
                 checkBoxEvent_sub_content(traditionalArtJson, traditionalArtInformation, traditionalArtMarker);
                 performanceDetailInformation_eventMethod();
               }
@@ -731,7 +738,7 @@
           checkClassic.onclick = function() {
             if(checkClassic.checked) {
               classicInformation = [...tempClassicInformation]; //원본인 tempPlayInformation 값을 가져옴
-              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+              if(performanceDetailInformation.style.width == '100%') { 
                 checkBoxEvent_sub_content(classicJson, classicInformation, classicMarker);
                 performanceDetailInformation_eventMethod();
               }
@@ -743,7 +750,7 @@
           checkExhibition.onclick = function() {
             if(checkExhibition.checked) {
               exhibitionInformation = [...tempExhibitionInformation]; //원본인 tempPlayInformation 값을 가져옴
-              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+              if(performanceDetailInformation.style.width == '100%') { 
                 checkBoxEvent_sub_content(exhibitionJson, exhibitionInformation, exhibitionMarker);
                 performanceDetailInformation_eventMethod();
               }
@@ -755,7 +762,7 @@
           checkDance.onclick = function() {
             if(checkDance.checked) {
               danceInformation = [...tempDanceInformation]; //원본인 tempPlayInformation 값을 가져옴
-              if(performanceDetailInformation.style.width == '100%') { //만약 상세보기 창이 열러있는 상태에서 드롭다운에서 해당 공연을 클릭한 경우 상세창을 먼저 닫고 checkBoxEvent_sub_content 함수 호출.
+              if(performanceDetailInformation.style.width == '100%') { 
                 checkBoxEvent_sub_content(danceJson, danceInformation, danceMarker);
                 performanceDetailInformation_eventMethod();
               }
@@ -765,7 +772,14 @@
             }
           }
         }
-        //현재기능-괄호 앞 키워드까지만 검색
+        //keywordFilter 메소드를 설명하기 전에 설명할 것이 공연(ex 뮤지컬 노트르담)하나의 객체에는 공연장 이름과 공연장 ID 정보만 저장되어 있다.
+        //placeJson에서 '부산 공연장 정보' Json에는 부산의 모든 공연장 이름과 공연장 ID와 해당 공연장의 주소, 위도, 경도 정보가 들어있다. 따라서 공연(ex 뮤지컬 노트르담)하나의 들어있는 공연장 ID를
+        //placeJson에서 공연장 ID과 매칭하여 있다면  공연(ex 뮤지컬 노트르담)하나 객체에 프로퍼티를 추가하여 위도, 경도, 주소 값을 복사해서 저장한다. 
+        //하지만 매칭이 되지 않는 경우가 발생하는데 이 경우는 kakao 위자들의 sample 코드로 '카카오 키워드 맵 검색'이라는 인터페이스가 있다.  공연(ex 뮤지컬 노트르담)하나의 공연장 이름을 '키워드 검색'을 하게 되면
+        //검색 결과와 매칭되는 결과가 여러개 이며 이를 배열로 반환해준다. 따라서 이 여러 검색 결과 중 우리가 찾으려는 공연장을 추출해낼 필요가 있다. 
+        //우선 keywordFilter 메소드는 매개변수로 공연(ex 뮤지컬 노트르담)하나 공연장 이름을 매개변수로 지정하면 예를 들어 "MBC드림홀(구, MBC삼주아트홀)"이 원본인데 이 값이 매개변수로 들어가면
+        //"MBC드림홀(구, MBC삼주아트홀)" -> "부산 MBC드림홀" 이 문자열로 리턴해준다. 이렇게 하는 이유는 부산을 앞에 붙이면 부산 지역 내로 검색이 되며 괄호는 불필요한 정보가 될 수 있어 제거를 해줘
+        //1차적으로 검색결과들의 연관성을 높이기 위한 방법입니다. 
         function keywordFilter(str) {
             var arr = str.split('');//문자별로 분할
             var indexNum;
@@ -781,19 +795,18 @@
 
         }
 
-      //검색결과가 같은지 반환
-      //공연데이터에 포함된 공연장 이름과 카맵에서 검색한 장소 둘을 비교해주는함수
+      //키워드 검색 시 원문인 "MBC드림홀(구, MBC삼주아트홀)" 공연장을 keywordFilter메소드를 통해 "부산 MBC드림홀" 이 문자열로 키워드 검색을 하며 상위 2개의 요소를 저장한다. 
+      //그리고 검색된 상위 2개의 공연장 이름과 우리가 검색하려는 공연장의 원문인 "MBC드림홀(구, MBC삼주아트홀)" 문자열과 비교하여 같은 true를 리턴하고 true가 리턴되면 
+      //그 공연장 정보를 해당 공연(ex 뮤지컬 노트르담)의 공연장 장소로 지정한다. 
+      //isSame은 두 str1, str2의 비교 알고리즘으로 str1은 원문이 들어가고, str2는 키워드 검색 결과 문자열이 들어간다. 
       function isSame(str1, str2) {
-          //console.log("start")
           var isSame = false;
-          //console.log("first "+str1+" "+str2)
           if (str1 == str2) {//두 문자열이 완전 일치
               isSame = true;
           }
           else {
               var secondCompareStr1 = keywordFilter(str1).replace(/(\s*)/g, "");
               var secondCompareStr2 = keywordFilter(str2).replace(/(\s*)/g, "");
-              //console.log("second "+secondCompareStr1+" "+secondCompareStr2);
               if (secondCompareStr1 == secondCompareStr2) {//괄호와 공백을 제거한 두문자열의 일치
                   isSame = true;
               }
@@ -807,15 +820,12 @@
                       strArrS = strArrB;
                       strArrB = temp;
                   }
-                  //console.log("third "+strArrB+" "+strArrS);
                   if (strArrB == strArrS) {//정제한 문자열이 같으면 true
                       isSame = true;
                   }
                   else {
                       for (var i = 0; i < strArrS.length; i++) {//큰문자열앞부터에 끝까지에 작은문자열이 포함되있는지 검사
-                          //console.log(strArrS);
                           if (strArrS[i] != strArrB[i]) {//중간에 같지않으면 break하고 false값 반환
-                              //console.log("forth not Matched "+strArrS+" "+strArrB);
                               isSame = false;
                               var forthStr1 = keywordFilter(str1)//괄호및 공백제거
                               forthStr1 = forthStr1.replace(/(\s*)/g, "");
@@ -825,12 +835,10 @@
 
                               forthStr1 = forthStr1.replace("부산", '');//부산 제거
                               forthStr2 = forthStr2.replace("부산", '');
-                              //console.log("fifth "+forthStr1+" "+forthStr2);
                               if (forthStr1 == forthStr2) {
                                   isSame = true;
                               }
                               else {
-                                  //console.log("ended with no match")
                                   isSame = false//분기의 마지막
                               }
                               break;
@@ -844,7 +852,12 @@
 
           return isSame;
       }//show 배열에따라 마커추가
-      //매개변수 str에 해당하는 테마 코드가 테마코드 Json 에 존재하면 해당 테마코드의 문자열 반환해줌
+      
+      //공연(ex 뮤지컬 노트르담)하나에는 테마 코드 프로퍼티가 있다. 1234,5678,.. 이와 같은 문자여로 4자리 정수들이 콤바로 구분되어있다. 
+      //tcode는 배열로 콤마들을 기준으로 split한 결과가 들어간다.
+      //'부산 공연 테마코드' Json은 테마코드에 해당하는 테마가 무엇인지 매칭되어이 있다. (1234 -> "즐거움")
+      //isTheme함수는 테마코드를 테마코드 Json의 객체에 매칭하여 1234에 헤댕하는 "즐거움" 이라는 문자열을 반환해준다. 
+      //themeCode배열에는 테마코드 Json 정보가 들어있는 객체를 담는 배열이며 객체의 theme 프로퍼티는 1234 와 같은 테마코드이며, theme_nm프로퍼티는 "즐거움"과 같이 그와 매칭되는 테마 문자열이다.
       function isTheme(tCode) {
         for(let i = 0; i < themeCode.length; i++) {
          
@@ -855,9 +868,11 @@
         return '';
       }
 
+        //이 메소드는 이 앱의 중처적인 역할을 담당하는 메소드로 input은 1번 매개변수로 XXXInformation이 들어가며, 2번 매개변수는 XXXMarder 배열이 들어간다.
+        //output으로는 
         function showPerformance(performanceInfor, performaceMaker) {
           //-------------맵에 마커 출력---------------------------------------------------- 
-          //기존 마커들 모두 제거
+          //기존 마커들 배열에서 모두 제거하고 화면에서 모두 지운다. 즉 마커 정보를 담는 객체를 비우고 화면에 출력된 마커들을 모두 지운다. 
           for (let i = 0; i < musicalMarker.length; i++)  musicalMarker[i].setMap(null);
           for (let i = 0; i < operaMarker.length; i++)  operaMarker[i].setMap(null);
           for (let i = 0; i < playMarker.length; i++)  playMarker[i].setMap(null);
@@ -876,34 +891,45 @@
           for(let i =0 ; i<exhibitionMarker.length; i++) exhibitionMarker.pop();
           for(let i =0 ; i<danceMarker.length; i++) danceMarker.pop();
 
+          //8개의 공연은 각 마커 색상(마커 이미지)가 지정된다. 
+          var imageSrc; 
+          if(performanceInfor == musicalInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/purple.png';}
+          else if(performanceInfor == operaInformation){imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/pink.png';}
+          else if(performanceInfor == playInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/green.png';}
+          else if(performanceInfor == concertInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/yellow.png';}
+          else if(performanceInfor == traditionalArtInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/red.png';}
+          else if(performanceInfor == classicInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/light_green.png';}
+          else if(performanceInfor == exhibitionInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/skyblue.png';}
+          else if(performanceInfor == danceInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/black.png';}
+
           
           infowArray =[];//infow 초기화
 
           // 지도에 마커를 생성하고 표시한다
           let j;
           currentMakerLength=0;
+          //공연(ex 뮤지컬 노트르담)에 공연장 주소, 위도, 경도 정보를 저장해주는 for문이다. 
           for(let i=0; i < performanceInfor.length; i++) {
             var placeObject;
             for(j = 0; j < placeInformation.length; j++) {
               if(placeInformation[j].placeId == performanceInfor[i].place_id) {
                 placeObject = placeInformation[j];
-                //뮤지컬 요소 객체에 위도 경도 추가
+                //만약 공연(ex 뮤지컬 노트르담)에 해당하는 공연장이 매칭이 된 경우 공연(ex 뮤지컬 노트르담)에 주소, 위도, 경도 정보를 새로운 프로퍼티로 저장한다. 
                 performanceInfor[i].lttd = placeObject.lttd;
                 performanceInfor[i].lngt = placeObject.lngt;
                 performanceInfor[i].addr = placeObject.addr;
                 break;
               }
             }
+            //만약 매칭이 공연(ex 뮤지컬 노트르담)에 해당하는 공연장이 공연장 Json에 매칭이 안된 경우 카카오맵의 '키워드 검색'을 한다. 
             if(j == placeInformation.length) {
-             
-              // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-              let placesSearchCB = function (data, status, pagination) {
+              // 키워드 검색 완료 시 호출되는 콜백함수
+                 function placesSearchCB (data, status, pagination) {
                   if (status === kakao.maps.services.Status.OK) {
                       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
                       // LatLngBounds 객체에 좌표를 추가합니다
                       var bounds = new kakao.maps.LatLngBounds();
 
-                     console.log(data[0]);
                       //검색된 상위 2개 결과를 배열에 넣고 isSame() 함수로 키워드가 같은지 필터링을 한다. 
                       if(isSame(performanceInfor[i].place_nm, data[0].place_name)){
                         displayMarker(data[0]);    
@@ -917,7 +943,7 @@
                         performanceInfor[i].lttd = "";
                       }      
                   } 
-                  //장소 조회가 안된 경우
+                  //키워드 검색조차도 안 된 경우 아래의 ""빈 값을 저장한다. 이 값인 경우 상세 보기 창을 누르면 alert로 공연장 위치를 조회할 수 없다는 문구를 띄운다. 
                   else {
                     performanceInfor[i].lttd = "";
                   }
@@ -925,16 +951,6 @@
 
               // 지도에 마커를 표시하는 함수입니다
               let displayMarker = function (place) {
-                  var imageSrc; 
-                  if(performanceInfor == musicalInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/purple.png';}
-                  else if(performanceInfor == operaInformation){imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/pink.png';}
-                  else if(performanceInfor == playInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/green.png';}
-                  else if(performanceInfor == concertInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/yellow.png';}
-                  else if(performanceInfor == traditionalArtInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/red.png';}
-                  else if(performanceInfor == classicInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/light_green.png';}
-                  else if(performanceInfor == exhibitionInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/skyblue.png';}
-                  else if(performanceInfor == danceInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/black.png';}
-                  
                   var imageSize = new kakao.maps.Size(30,40);
                   var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
                   var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
@@ -962,21 +978,13 @@
               }
               ps.keywordSearch("부산 "+keywordFilter(performanceInfor[i].place_nm), placesSearchCB);   
             }   
-
+            //공연(ex 뮤지컬 노트르담)에 해당하는 공연장이 매칭이 된 경우 placeObject 변수에 공연장 Json 정보가 담기고 주소, 위도, 경도를 복사해서 
+            //공연(ex 뮤지컬 노트르담) 객체에 새로운 프로퍼티로 추가한다. 
             else {
               func();
               function func() {
                 var lat = placeObject.lttd; //위도 저장
                 var lng = placeObject.lngt; //경도 저장
-                var imageSrc; 
-                if(performanceInfor == musicalInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/purple.png';}
-                else if(performanceInfor == operaInformation){imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/pink.png';}
-                else if(performanceInfor == playInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/green.png';}
-                else if(performanceInfor == concertInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/yellow.png';}
-                else if(performanceInfor == traditionalArtInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/red.png';}
-                else if(performanceInfor == classicInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/light_green.png';}
-                else if(performanceInfor == exhibitionInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/skyblue.png';}
-                else if(performanceInfor == danceInformation) {imageSrc = 'https://mpv990422.duckdns.org/imgs/markerImg/black.png';}
                     
                 var imageSize = new kakao.maps.Size(30,40);
                 var imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -994,10 +1002,10 @@
                 marker.setMap(map);
 
 
-                kakao.maps.event.addListener(marker, "click", function(){infoWindow.open(map, marker)}); 
-                kakao.maps.event.addListener(map, "click", function(){infoWindow.close()});
+                kakao.maps.event.addListener(marker, "click", function(){infoWindow.open(map, marker)});  //마커를 클릭하면 해당 마커의 공연장 정보가 뜨는 이벤트를 등록한다. 
+                kakao.maps.event.addListener(map, "click", function(){infoWindow.close()}); //사용자가 map을 클릭하면 화면에 띄워즌 모든 공연장 정보들이 다 꺼진다. 
                 
-                performaceMaker[currentMakerLength]=marker;  // 생성된 마커를 배열에 추가합니다
+                performaceMaker[currentMakerLength]=marker;  // 생성된 마커를 배열에 추가
                 currentMakerLength++;
               }
             }
@@ -1008,7 +1016,7 @@
                 performaceMaker[i].setMap(map);
               }            
           }
-          // "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다
+          // "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수
           function hideMarkers() {
               setMarkers(null);    
           }
@@ -1019,11 +1027,10 @@
             map.setCenter(movaLatLon);
           }
 
-          //----스크롤에 목록 저장-----------------------------
-
-          while ( scrollBar_ul.hasChildNodes() ) { scrollBar_ul.removeChild( scrollBar_ul.firstChild ); }// 태그 초기화
+          //----가로 스크롤에 공연 목록 저장-----------------------------
+          while ( scrollBar_ul.hasChildNodes() ) { scrollBar_ul.removeChild( scrollBar_ul.firstChild ); }// 가로 스크롤에 저장된 공연들 다 지우기.
           for(let i = 0; i < performanceInfor.length; i++) {
-                const li  = document.createElement('li');
+                const li  = document.createElement('li'); //하나의 li태그는 하나의 공연(ex 뮤지컬 노트르담)이다. 
                 li.insertAdjacentHTML('beforeend', `${(performanceInfor[i].title)? performanceInfor[i].title:"-"}<br><br>
                 ${(performanceInfor[i].op_st_dt)? performanceInfor[i].op_st_dt:"-"} ~ ${(performanceInfor[i].op_ed_dt)? performanceInfor[i].op_ed_dt:"-"}<br><br>
                 ${(performanceInfor[i].place_nm)? performanceInfor[i].place_nm:"-"}`);
@@ -1057,10 +1064,27 @@
                   li.style.border = '2px solid #5D5D5D'
                 }
                 li.onclick = function(event) {
-                 
+                  let c = 0; 
+                  console.log('================================');
+                  clickPark = [];
+                  for(let a = 0; a<clickParkMarker.length; a++) clickParkMarker[a].setMap(null);
+                  clickParkMarker = []; //주차장 마커 초기화
                   for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
-                  //다봄 홈페이지에서 사용자가 클릭한 공연 img 가져오기
-                
+                  
+                  //사용자가 클릭한 공연을 원점으로 1km내의 공영 주차장을 가져옴
+                  for(let a = 0; a<totalPark.length; a++) {
+                    if(performanceInfor[i].lttd != "") {
+                      //현재 공연장을 중심으로 반경 1km내에 있는 경우
+                      if(getDistanceFromLatLonInKm(performanceInfor[i].lttd ,performanceInfor[i].lngt, totalPark[a].lttd, totalPark[a].lngt) <= 1) {
+                        clickPark[c] = totalPark[a];
+                        c++;
+                      }
+                    }
+                  }
+                  console.log("현재 클릭한 공연 근처 1km 반경 내의 주차장 개수: "+clickPark.length);
+                  
+
+                  //사용자가 공연(ex 뮤지컬 노트르담)하나를 클릭해서 이미 상세창이 뜬 상태에서 다른 li 공연을 클릭 한 경우
                   if(performanceDetailInformation.style.width == '100%') {
                     performanceDetailInformation_eventMethod();
                     hiddenHeaderElement();
@@ -1077,18 +1101,20 @@
                     else if(performanceInfor == exhibitionInformation) {event.target.style.backgroundColor = "#29abe2";}
                     else if(performanceInfor == danceInformation) {event.target.style.backgroundColor = "#5D5D5D";}
                     
+                    //공연(ex 뮤지컬 노트르담)에 해당하는 공연장이 매칭안되고 키워드 검색 결과도 없는 경우 장소를 조회할 수 없다고 알림창을 띄움
                     if( performanceInfor[i].lttd == "") {
                       hideMarkers();
                       alert("장소를 조회할 수 없습니다. \r공연 정보만 표시합니다.");
                     }
                     else {
                       hideMarkers();
-                      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
-                      imageSize = new kakao.maps.Size(40, 50), // 마커이미지의 크기입니다
-                      imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                      var clickMarkerImage = 'https://mpv990422.duckdns.org/imgs/markerImg/selMarker.gif', // 공연(ex 뮤지컬 노트르담)하나를 클릭하면 하나의 공연의 마커 이미지
+                      clickMarkerParkImage = 'https://mpv990422.duckdns.org/imgs/markerImg/parkMarker.png';
+                      imageSize = new kakao.maps.Size(80, 80), // 마커이미지의 크기입니다
+                      imageOption = {offset: new kakao.maps.Point(40, 80)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
                       // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다.
 
-                      let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+                      let markerImage = new kakao.maps.MarkerImage(clickMarkerImage, imageSize, imageOption),
                           markerPosition = new kakao.maps.LatLng(performanceInfor[i].lttd, performanceInfor[i].lngt); // 마커가 표시될 위치입니다
 
                       // 마커를 생성합니다
@@ -1097,25 +1123,38 @@
                           image: markerImage // 마커이미지 설정 
                       });
 
-                      cilckMarker.setMap(map);
-                      setFocusCenter(performanceInfor[i].lttd, performanceInfor[i].lngt);
-
                       var infoWindow = new kakao.maps.InfoWindow({
                         content: `${performanceInfor[i].place_nm}`,
                       });
                       infowArray.push(infoWindow);
                       kakao.maps.event.addListener(cilckMarker, "click", function(){infoWindow.open(map, cilckMarker)}); 
                       kakao.maps.event.addListener(map, "click", function(){infoWindow.close()});
+
+                      //주차장 마커 화면에 표시
+                      for(let i =0; i < clickPark.length;i++) {
+                        let parkImageSize = new kakao.maps.Size(30, 40); // 마커이미지의 크기입니다
+                        let parkImage = new kakao.maps.MarkerImage(clickMarkerParkImage, parkImageSize, imageOption);
+                        let parkPosition = new kakao.maps.LatLng(clickPark[i].lttd, clickPark[i].lngt); // 마커가 표시될 위치입니다
+
+                        // 마커를 생성합니다
+                        let ParkMarker = new kakao.maps.Marker({
+                            position: parkPosition, 
+                            image: parkImage // 마커이미지 설정 
+                        });
+                        clickParkMarker[i] = ParkMarker;
+                        clickParkMarker[i].setMap(map);
+                      }
+                      //주차장 마커 표시가 끝나면 클릭한 공연장 마커 표시
+                      cilckMarker.setMap(map);
+                      setFocusCenter(performanceInfor[i].lttd, performanceInfor[i].lngt);
                     }
 
-                    idMainTag.style.height = '115%'; ///80%->120%
-                    idMain_section1Tag.style.height = '70%'; ///100%->65%
+                    idMainTag.style.height = '115%'; ///80%->115%
+                    idMain_section1Tag.style.height = '70%'; ///100%->70%
                     performanceDetailInformation.style.width = '100%';
                     performanceDetailInformation.style.height = '250px';  
-                   // performanceDetailInformation.style.backgroundImage = `url(${performanceInfor[i].image})`;
-                    //performanceDetailInformation.style.backgroundSize ='100% 100%';
 
-                    /*여기다 뮤지컬 정보 표시*/
+                    //상세 보기창에 공연(ex 뮤지컬 노트르담) 상세 정보를 추가해주는 구간
                     for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
                       var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
                       if(color == "rgb(96, 63, 131)"  || color == "rgb(250, 208, 201)" || color == "rgb(43, 174, 102)"
@@ -1135,8 +1174,9 @@
                          }
                        }
                        
+                       //performanceDetailInformation 변수는 상세 보기 창의 DOM 객체이며 상세 정볼르 추가해준다. 삼항 연산자로 만약 프로퍼티가 없다면 "-" 처리한다. 
                         performanceDetailInformation.insertAdjacentHTML('beforeend', 
-                      `${(performanceInfor[i].image)? `<img src =${performanceInfor[i].image} width= "100%" height="300px" style="display:block;borderRadius:100%;"><br>` : `<h5>image is loading.<h5><h5>Please Click it again later.</h5><br><br>`}
+                      `${(performanceInfor[i].image)? `<img src =${performanceInfor[i].image} width= "100%" height="300px" style="display:block;borderRadius:100%;"><br>` : `<p>Image is loading.  Refresh it later.</p><img style ="margin 0 auto; width:50px; height:50px"src = "http://mpv990422.duckdns.org/imgs/Spinner.gif">`}
                         <h4>Title: </h4>${(performanceInfor[i].title)? performanceInfor[i].title:"-"}<br>
                         <h4>Date: </h4>${(performanceInfor[i].op_st_dt)? performanceInfor[i].op_st_dt:"-"} ~ ${(performanceInfor[i].op_ed_dt)? performanceInfor[i].op_ed_dt:"-"}<br>
                         <h4>Location: </h4>${(performanceInfor[i].place_nm)? performanceInfor[i].place_nm:"-"}<br>
@@ -1169,6 +1209,7 @@
                   }
                   else {
                     naviIcon.style.backgroundColor = "#BCE55C"
+                    //카카오 네비 앱을 연동해주며 주소, 위도, 경도 정보를 아래와 같은 형식으로 지정하면 네비 앱으로 전환된다. 
                     Kakao.Navi.start({
                       name: performanceInfor[i].addr,
                       x: Number(performanceInfor[i].lngt),
@@ -1193,6 +1234,7 @@
                     return;
                   }
                   else {
+                    //주소, 위도, 경도 값을 통해 카카오 맵 사이트 (앱이 있다면 앱으로) 연동된다. 
                     mapIcon.style.backgroundColor = "#BCE55C"
                     var url2 = `https://map.kakao.com/link/to/${performanceInfor[i].addr},${performanceInfor[i].lttd},${performanceInfor[i].lngt}`;
                     window.open(url2);
@@ -1203,6 +1245,7 @@
             alert(`공연을 선택하세요!`);
           }
 
+          //공연의 예매 사이트인 다봄 사이트로 전환한다. 
           reservationIcon.onclick = function() {
             for(let i = 0; i < scrollBar_ul_childCount.childElementCount; i++) {
               var color = scrollBar_ul_childCount.children[i].style.backgroundColor;
@@ -1218,6 +1261,7 @@
           }
         }
 
+        // 현재 날짜짜를 yyyy-mm-dd 형태의 문자열로 반환한다. 
         function getToday () {
             var date = new Date();
             var year = date.getFullYear();
@@ -1225,19 +1269,8 @@
             var day = ("0" + date.getDate()).slice(-2);
             return year +'-'+ month +'-' + day;
         }
-         // 인포윈도우 표시 열기
-        function mouseOverListener(map, marker, infoWindow) {
-          return function () {
-            infoWindow.open(map, marker);
-          };
-        }
-        // 인포윈도우 표시 닫기
-        function mouseOutListener(infoWindow) {
-          return function () {
-            infoWindow.close();
-          };
-        }
-        //매개변수로 전달된 json 공연 데이터를 정렬해주는 함수
+
+        //매개변수로 전달된 XXXInformation 공연 객체를 담는 배열을 시간 순서에 따라 정렬해주는 함수 bubble sort 사용 
         function sortDate(arrData) {
             for (var i = arrData.length - 1; i > 0; i--) {
                 for (var j = 0; j < i; j++) {
@@ -1259,10 +1292,9 @@
         }
         
         
-        detailScreenEventSet();
-        checkBoxEvent();
-        //---------------공연장 이름, 뮤지컬 정보 추출----------------------------------- 
-
+        detailScreenEventSet(); //상세보기 창 클릭 이벤트 메소드
+        checkBoxEvent();        //8개 공연 드롭다운 클릭시 이벤트 메소드
+        //---------------공연장 이름, 8가지 공연Json 정보 추출----------------------------------- 
         fetch(place)
         .then(res => res.json())
         .then(resJson => {
@@ -1301,7 +1333,7 @@
                 for(let i = 0; i<operaInformation.length; i++) operaInformation.pop();
                   let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 오페라만 추출
                     if(performance[i].op_ed_dt >= today) {
                       operaInformation[j] = performance[i];
                       j++;
@@ -1322,7 +1354,7 @@
                 for(let i = 0; i<playInformation.length; i++) playInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 연극만 추출
                     if(performance[i].op_ed_dt >= today) {
                       playInformation[j] = performance[i];
                       j++;
@@ -1343,7 +1375,7 @@
                 for(let i = 0; i<concertInformation.length; i++) concertInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 콘서트만 추출
                     if(performance[i].op_ed_dt >= today) {
                       concertInformation[j] = performance[i];
                       j++;
@@ -1364,7 +1396,7 @@
                 for(let i = 0; i<traditionalArtInformation.length; i++) traditionalArtInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 전통 무용만 추출
                     if(performance[i].op_ed_dt >= today) {
                       traditionalArtInformation[j] = performance[i];
                       j++;
@@ -1385,7 +1417,7 @@
                 for(let i = 0; i<classicInformation.length; i++) classicInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 클래식만 추출
                     if(performance[i].op_ed_dt >= today) {
                       classicInformation[j] = performance[i];
                       j++;
@@ -1406,7 +1438,7 @@
                 for(let i = 0; i<exhibitionInformation.length; i++) exhibitionInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 전시만 추출
                     if(performance[i].op_ed_dt >= today) {
                       exhibitionInformation[j] = performance[i];
                       j++;
@@ -1427,7 +1459,7 @@
                 for(let i = 0; i<danceInformation.length; i++) danceInformation.pop();
                 let j = 0;
                 for(let i = 0; i < totalCount; i++) {
-                    //현재 시각 기준 공연 예정인 뮤지컬만 추출
+                    //현재 시각 기준 공연 예정인 무용만 추출
                     if(performance[i].op_ed_dt >= today) {
                       danceInformation[j] = performance[i];
                       j++;
@@ -1449,14 +1481,38 @@
                 themeCode[i] = array[i];
               }
             });
+
+            //부산 공영 주차장 Json 추출
+            fetch(parkJson)
+            .then(res => res.json())
+            .then(resJson => {
+              var array = resJson.getPblcPrkngInfo.item;
+              var totalCount = resJson.getPblcPrkngInfo.totalCount;
+              for(let i = 0; i<totalCount; i++) {
+                totalPark[i] = array[i];
+
+                //주차장 Json에서 주차장 가져오기
+                function parkSearch(data, status, pagination) {
+                  if (status === kakao.maps.services.Status.OK) {
+                    totalPark[i].lttd = data[0].y;
+                    totalPark[i].lngt = data[0].x;
+                  }
+                  else {
+                    totalPark[i].lttd ="";
+                  }
+                }
+                //카카오 맵에서 "부산 + 공연장명 + 주차장"으로 검색한 결과도 추가하여 반영하기
+                ps.keywordSearch(totalPark[i].jibunAddr, parkSearch);
+               
+              }
+            });
         });
 
         
-
-
-        //드롭다운 클릭시 이벤트 구현
+        //Header의 menu 버튼 클릭시 이벤트 구현
         hiddenbutton.onclick = function() {
           for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
+          //드롭다운 창이 닫힌 경우
           if(hiddenList.style.width=="" || hiddenList.style.width=="0%") {
             hiddenbutton.style.transform="rotate(360deg)";
             //hiddenList_content.style.width = '120px';
@@ -1466,6 +1522,7 @@
             hiddenHeaderElement();
             
           }
+          //드롭다운 창이 열린 경우
           else if(hiddenList.style.width=="100%" && hiddenList_content_ul.style.opacity == '1') {
             hiddenbutton.style.transform="rotate(0deg)";
             hiddenList_content_ul.style.opacity = '0';
@@ -1482,19 +1539,17 @@
                 visibleHeaderElement('ALL');
               }
             }
-            
-            //hiddenList_content.style.width = '0px';
           }
         }
   
-        function sub_nowPlaying() {
+        //nowPlaying 메소드에서 호출되는 callee로 클릭시 실행이 구현되는 메소드이다. 
+        function callee_nowPlaying() {
           let j = 0;
           let temp = [];
-          let nowPerformenceBorderColor = scrollBar_ul_childCount.children[0];
+          let nowPerformenceBorderColor = scrollBar_ul_childCount.children[0]; //li태그의 배경색으로 8가지 공연중 어떤 공연인지를 판단한다. 
           if(nowPlaying.firstChild.style.display == 'block') {
-              //현재 상형중인 공연만 보여주기
+              //nowPlaying.className == 'false'인 경우 사용자가 Playing.. 버튼을 on 한 경우 이므로, 현재 상형중인 공연만 보여주기
               if(nowPlaying.className == 'false') {
-                console.log(nowPerformenceBorderColor.style.borderColor);
                 nowPlaying.className ='true';
                 nowPlaying.style.backgroundColor = '#BCE55C';
                 nowPlaying.style.transform="rotate(360deg)";
@@ -1503,6 +1558,8 @@
                   musicalInformation = [...temp];
                   showPerformance(musicalInformation, musicalMarker);
                 }
+                //현재 화면에 보여지는 창이 뮤지커컬인 경우 temp라는 임시 저장소에서 XXXInformation을 가공하여 현재 상영중인 정보만 추출하여 temp에 저장한다. 
+                //XXXInformation의 원본은 tempXXXInformation이 가지고 있으므로 XXXInformation을 temp의 값으로 reset 한다. 그리고 showPerformance를 호출한다. 
                 else if(nowPerformenceBorderColor.style.borderColor=="rgb(96, 63, 131)") {
                   for(let i = 0; i <musicalInformation.length; i++) {
                     if(musicalInformation[i].op_st_dt <= today) {
@@ -1582,11 +1639,13 @@
                 dataDesignation_send.style.visibility = 'hidden';
                 dataDesignation_send.value ='     ';
               }
+              //nowPlaying.className == 'true' 인 경우 사용자가 Playing.. 버튼을 off 한 경우 이므로, 다시 원래대로 돌린다. 
               else if(nowPlaying.className == 'true') {
                 nowPlaying.className ='false';
                 nowPlaying.style.backgroundColor = '#EAEAEA';
                 nowPlaying.style.transform="rotate(0deg)";
 
+                //Playing.. 버튼이 off이므로 tempXXXInformation 원본을 다시 불러와 showPerformance를 호출한다. 
                 if(checkMusical.checked) {
                   musicalInformation = [...tempMusicalInformation];
                   showPerformance(musicalInformation, musicalMarker);
@@ -1627,15 +1686,18 @@
               } 
           }
         }
-        //Playing.. 버튼 클릭이벤트
+        //Playing.. 버튼 클릭 이벤트
         nowPlaying.onclick = function() {
           for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
-          sub_nowPlaying();
+          callee_nowPlaying();
         }
 
-        function sub_sub_dateDesignation_send() {
+        //callee_dateDesignation_send() 에서 호출되는 callee이다. 
+        function callee_callee_dateDesignation_send() {
           let j = 0;
           let temp = [];
+          //8가지 공연 중 현재 어떤 공연지를 if-else 문으로 구분하여 공연의 날짜가 사용자가 지정한 날짜인 userInputDateValue값 사이에 사영하는 공연을 XXXInformation에서 추출하여
+          //temp 에 저장한 뒤 이 값을 XXXInformation의 새로운 값으로 reset한다. 그리고 showPerformace 메소드를 호출한다. 
           if(checkMusical.checked) {
               for(let i = 0; i <musicalInformation.length; i++) {
                 if(musicalInformation[i].op_st_dt <= userInputDateValue && musicalInformation[i].op_ed_dt >= userInputDateValue) {
@@ -1709,12 +1771,15 @@
               showPerformance(danceInformation, danceMarker);
           }
         }
-        function sub_dataDesignation_send() {
+
+        //dataDesignation_send() 에서 호출되는 callee이다. 
+        function callee_dataDesignation_send() {
           let j = 0;
           let temp = [];
           if(dataDesignation_send.value == "확인") {
-              //현재 상형중인 공연만 보여주기
+              //현재 상형중인 공연만 보여주는 버튼이 on되는 경우이다.
               if(dataDesignation_send.className == 'false') {
+                //각종 에니메이션이 진행된 후 callee_callee_dateDesignation_send가 호출된다. 
                 dataDesignation_send.className ='true';
                 dataDesignation_send.style.backgroundColor = '#BCE55C';
                 dataDesignation_send.className ='true';
@@ -1723,8 +1788,9 @@
                 nowPlaying.style.visibility = 'hidden';
                 nowPlaying.firstChild.style.display = 'none';
                 
-                sub_sub_dateDesignation_send();
+                callee_callee_dateDesignation_send();
               }
+              //현재 상형중인 공연만 보여주는 버튼이 off되는 경우이다. 이는 사용자 날짜 지정 공연 추출에서 다시 원래대로 돌리게 된다. 
               else if(dataDesignation_send.className == 'true') {
                 dataDesignation_send.className ='false';
                 dateDesignation.style.backgroundColor = '#EAEAEA';
@@ -1733,6 +1799,7 @@
                 nowPlaying.style.visibility = 'visible';
                 nowPlaying.firstChild.style.display = 'block';
 
+                //XXXInformation의 값을 원본 객체의 값으로 돌리고 showPerformance를 호출한다. 
                 if(checkMusical.checked) {
                   musicalInformation = [...tempMusicalInformation];
                   showPerformance(musicalInformation, musicalMarker);
@@ -1774,7 +1841,20 @@
           }
         }
 
-        function caller_setPerformance_Information_Image(performanceInformation, len, InformationString) {
+        //날짜 입력 버튼을 클릭했을 때 발생하는 이벤트
+        dateDesignation.value = today;
+        dataDesignation_send.onclick = function() {
+          for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
+          userInputDateValue = dateDesignation.value;
+          callee_dataDesignation_send();
+        }
+
+        //setPerformance_Information_Image() 에서 호출되는 callee이다. 
+        //이 메소드는 공연(ex 뮤지컬 노트르담)에 해당하는 다봄 사이트에서 공연 이미지를 크롤링 하여 이미지를 가져오는 메소드이다. 
+        //callee에서는 이미지 크롤링이 진행된다. 첫 매개변수는 XXXInformation이 들어간다. XXXInformation이.image라는 프로퍼티에 크롤링르 통해 이미지의 URL 주소를 저장한다. 
+        //len 매개변수는 현재 XXXInformation의 배열의 index이다. 
+        // InformationString은 8가지 공연에 대한 "뮤지컬", "연극".. 등 문자열을 지정해주는 매개밴수이다.
+        function callee_setPerformance_Information_Image(performanceInformation, len, InformationString) {
             const proxy = 'https://busan-show.herokuapp.com/';
             var request = new XMLHttpRequest();
             request.open("GET", proxy + performanceInformation.dabom_url);
@@ -1789,10 +1869,9 @@
                   if (splitUrl[5] == "noimg_classic.jpg") {
                     imgUrl = 'http://busandabom.net/img/content/' + splitUrl[5]
                   }
-                  ////////////////////////////
+                  //다봄 사이트 크롤링을 통해 얻어진 이미지 URL을 XXXInformation.image의 값으로 저장한다. 
                   performanceInformation.image = imgUrl;
                   loadginEnd(InformationString, len);
-                  /////////////////////////////
                 } else {
                   console.error(request.status, request.statusText);
                 }
@@ -1802,38 +1881,30 @@
               console.error(request.status, request.statusText);
             };
             request.send(null);  // not a POST request, so don't send extra data
-            console.log(length+1==musicalInformation.length);
-            console.log(InformationString==="뮤지컬");
-           
-            //6개 공연중 처음으로 뮤지컬을 fetch하는데 뮤지컬 공연 정보 배열 요소에 image의 삽입이 모두 끝나면 호출되는 함수로 이때 로딩창 이미지를 꺼준다.
-            
+            //8개 공연중 처음으로 뮤지컬을 fetch하는데 뮤지컬 공연 정보 배열 요소에 image의 삽입이 모두 끝나면 호출되는 함수로 이때 로딩창 이미지를 꺼준다.          
         }
 
         function setPerformance_Information_Image(performanceInformation, InformationString) {
           for(let i=0; i < performanceInformation.length; i++) {
-            caller_setPerformance_Information_Image(performanceInformation[i], i, InformationString);
+            callee_setPerformance_Information_Image(performanceInformation[i], i, InformationString);
           }
         }
 
         //앱 접속시 로딩창이 뜨고 로딩이 끝나면 로딩창을 꺼주는 함수
         function loadginEnd(InformationString, len) {
-          loadingPercent.textContent=`Loading Images ${parseInt((len/musicalInformation.length)*100)}%`;
+          if((len +1)==musicalInformation.length) {
+            loadingPercent.textContent=`Loading Images 100%`;
+          }
+          else {
+            loadingPercent.textContent=`Loading Images ${parseInt(((len)/musicalInformation.length)*100)}%`;
+          }
+          
           if(InformationString==="뮤지컬" && ((len +1)==musicalInformation.length)) {
-            console.log('이미지 로딩 끝');
+            console.log('뮤지컬 이미지 로딩 끝');
             loadingScreen.style.display='none';
             footer.style.display = 'block';
             headerTag.style.display='block';
           }
-          
-        }
-        
-        
-        //날짜 입력 이벤트
-        dateDesignation.value = today;
-        dataDesignation_send.onclick = function() {
-          for(let a = 0; a < infowArray.length; a++) {infowArray[a].close();}//infoWindow.close()로 마커 클릭시 뜨는 알림창 모두 끄기
-          userInputDateValue = dateDesignation.value;
-          sub_dataDesignation_send();
         }
  </script>
  </body>
