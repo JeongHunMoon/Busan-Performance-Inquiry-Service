@@ -1,0 +1,48 @@
+.container>div{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container>div>label{
+    cursor: pointer;
+}
+.container>div>label>input[type="checkbox"]{
+    display: none;
+}
+.container>div>label>span{
+    width: 100px;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid skyblue;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+
+}
+.container>div>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: rgba(255, 255, 255, .1);
+}
+.container>div:nth-child(1)>label>input[type="checkbox"]:checked~span
+{
+    background: skyblue;
+}
+.container>div:nth-child(1)>label>span:hover
+{
+    background: skyblue;
+}
+.container>div:nth-child(2)>label>input[type="checkbox"]:checked~span
+{
+    background: black;
+}

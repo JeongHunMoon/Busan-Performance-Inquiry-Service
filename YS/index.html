@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <title>부산 공연 정보 시스템pc버전</title>
+    <meta charset="utf-8" >
+    <title>부산 공연 정보</title>
+    <!--css파일 로드-->
     <link rel="stylesheet" href="./css/mainForm.css" type="text/css">
     <link rel="stylesheet" href="./css/radioButton.css" type="text/css">
     <link rel="stylesheet" href="./css/loading.css" type="text/css">
+    <link rel="stylesheet" href="./css/slideMenu.css" type="text/css">
+    <link rel="stylesheet" href="./css/checkbox.css" type="text/css">
+    <link rel="stylesheet" href="./css/darkCheckbox.css" type="text/css">
+    <link rel="stylesheet" href="./css/closeBtn.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 
 <body>
     <div class="loading">
         <div class="loadimg">
-            <img src="./imgs/Spinner.gif" alt="spinner">
+            <img src="https://mpv990422.duckdns.org/imgs/smallSpinner.gif" alt="spinner">
+            <p class="state">   </p>
         </div>
     </div>
     <script>
@@ -28,53 +39,155 @@
         }
     </script>
 
-    <script type="text/javascript"src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2d840eb6653eca8815b6f489024e0ee2&libraries=services,clusterer"></script>
-    
-    <header class="header">pc버전 테스트</header>
-   
-    <nav class="nav">기능 메뉴 - 메모<br>
-        <input type="checkbox" id="musical" onclick="checkBoxClicked()" checked="checked"> 뮤지컬<br>
-        <input type="checkbox" id="opera"  onclick="checkBoxClicked()" checked="checked"> 오페라<br>
-        <input type="checkbox" id="play"  onclick="checkBoxClicked()" checked="checked"> 연극<br>
-    </nav>
-    
-    <aside class="aside">
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2d840eb6653eca8815b6f489024e0ee2&libraries=services,clusterer"></script>
+
+    <header class="header">
+        <div>
+            <p>부산 공연 정보</p>             
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div>
+            <div class="menu_box">
+                <button type="button" class="menu_button"><i class="fas fa-bars"></i><span class=" menu_title">공연 장르
+                        선택하기</span></button>
+                <div class="menu">
+                    <br>
+                    <br>
+                    <div class="typeCheckBox">
+                        <div>
+                            <label>
+                                <input type="checkbox" id="musical" onclick="checkBoxClicked()" checked="checked">
+                                <span>뮤지컬</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="opera" onclick="checkBoxClicked()" checked="checked">
+                                <span>오페라</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="play" onclick="checkBoxClicked()" checked="checked">
+                                <span>연극</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="concert" onclick="checkBoxClicked()" checked="">
+                                <span>콘서트</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="trad" onclick="checkBoxClicked()" checked="">
+                                <span>전통 예술</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="classic" onclick="checkBoxClicked()" checked="">
+                                <span>클래식</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="exhi" onclick="checkBoxClicked()" checked="">
+                                <span>전시</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="dance" onclick="checkBoxClicked()" checked="">
+                                <span>무용</span>
+                            </label>
+                        </div>
+                        <div class="asd">
+                            <button class="underline-btn" onclick="allCheck()">모두체크</button>
+                            <button class="underline-btn" onclick="allUncheck()">모두해제</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; ">
+            <p>현재 상영중</p>
+        </div>
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; ">
+            <div class="center" style="float: center;">
+                <input type="checkbox" onclick="checkBoxClicked()" id="playing">
+            </div>
+        </div>
+
         
-        <div style="position: relative; width: 100%; height: 4%;">상영정보</div>
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; ">
+            <p><span>날짜선택</span></p>
+        </div>
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; width: 100%; ">
+            <input type="date" id="datepicker" placeholder="날짜넣기" style="width: 80%;">
+            <br>
+            <button onclick="dateComfirmed()">확인</button>
+        </div>
+        
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; ">
+            <p>1Km 내의 주차장 보기</p>
+            <div class="center" style="float: center;">
+                <input type="checkbox" onclick="checkBoxClicked()" id="parking">
+            </div>
+        </div>
+
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; z-index: -1; ">
+        </div>
+
+        <div style=" display: inline-block ; height: 50px; text-align: center; position: relative; ">
+            <p>종료일순/가까운순</p>
+            <div class="center" style="float: center;">
+                <input type="checkbox" onclick="checkBoxClicked()" id="sort">
+            </div>
+        </div>
+        
+
+        <!--슬라이드메뉴 이벤트 리스너-->
+        <script type="text/javascript" src="./js/slideMenu.js"></script>
+    </nav>
+
+    <aside class="aside">
+
+        <div style="position: relative; width: 100%; height: 4%;">상영정보 리스트</div>
         <div class="container">
             <div class="top">
                 <!--<div class="labelTop">
                     <label class="labels">
                         <input type="radio" name="nope">
+                        <div class = "outOfoutbox">
                         <div class="outBox">test</div>
+                        <div>
                     </label>
                     테스트 버튼-->
-                </div>
+            </div>
             <div>
-        </div>
-        
+            </div>
     </aside>
-    
+
     <section class="sectionMap">
+        <div id="map" style="width:100%;height:100%; position: relative; z-index: 0; float: left;"></div>
         <!--지도 표시할 div-->
-        <div id="map" style="width:100%;height:100%;"></div>
-        
-
-    </section>
-    
-    <section class="sectionInfo">
-        <div style="text-align: center; position: relative; width: 100%; height: 10%;">공연 상세 정보창 - 공연 클릭시 활성화</div>
-        <div style="overflow-y: scroll; height: 100%; height: 90%;"><div class="detailInfo">
- </div></div>
-    
     </section>
 
-    <footer class="footer">하단 크레딧</footer>
+    <footer class="footer">
+        <p class="loadImg"></p>
+    </footer>
     <div class="empty"></div>
-            <!--지도 가져오기-->
-            <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
-    <script src="./js/mapApi.js"></script>
-    <script src="./js/show.js"></script>
+    <!--스크립트 가져오기-->
+
+    <script type="text/javascript" src="./js/mapApi.js"></script>
+    <script type="text/javascript" src="./js/show.js"></script>
 </body>
 
 </html>

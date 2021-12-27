@@ -1,0 +1,431 @@
+
+.typeCheckBox>div{
+    width: 99%;
+    margin: 2px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.typeCheckBox>div>label{
+    width: 100%;
+    cursor: pointer;
+}
+.typeCheckBox>div>label>input[type="checkbox"]{
+    display: none;
+}
+/*뮤지컬*/
+.typeCheckBox>div:nth-child(1)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    outline: none;
+    z-index: 3;
+}
+.typeCheckBox>div:nth-child(1)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(1)>label>input[type="checkbox"]:checked~span
+{
+    background: #603f83;
+    color: white;
+    border: 2px solid #603f83;
+}
+.typeCheckBox>div:nth-child(1)>label>span:hover
+{
+    background: #603f83;
+    color: white;
+    border: 2px solid #603f83;
+}
+/*오페라*/
+.typeCheckBox>div:nth-child(2)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(2)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(2)>label>input[type="checkbox"]:checked~span
+{
+    background: #fad0c9;
+    color: white;
+    border: 2px solid #fad0c9;
+    
+}
+.typeCheckBox>div:nth-child(2)>label>span:hover
+{
+    background: #fad0c9;
+    color: white;
+    border: 2px solid #fad0c9;
+}
+/*연극*/
+.typeCheckBox>div:nth-child(3)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(3)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(3)>label>input[type="checkbox"]:checked~span
+{
+    background: #2bae66;
+    color: white;
+    border: 2px solid #2bae66;
+}
+.typeCheckBox>div:nth-child(3)>label>span:hover
+{
+    background: #2bae66;
+    color: white;
+    border: 2px solid #2bae66;
+}
+/*콘서트*/
+.typeCheckBox>div:nth-child(4)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(4)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(4)>label>input[type="checkbox"]:checked~span
+{
+    background: #f2aa4c;
+    color: white;
+    border: 2px solid #f2aa4c;
+}
+.typeCheckBox>div:nth-child(4)>label>span:hover
+{
+    background: #f2aa4c;
+    color: white;
+    border: 2px solid #f2aa4c;
+}
+/*전통 예술*/
+.typeCheckBox>div:nth-child(5)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(5)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(5)>label>input[type="checkbox"]:checked~span
+{
+    background: #b72e2e;
+    color: white;
+    border: 2px solid #b72e2e;
+
+}
+.typeCheckBox>div:nth-child(5)>label>span:hover
+{
+    background: #b72e2e;
+    color: white;
+    border: 2px solid #b72e2e;
+}
+/*클래식*/
+.typeCheckBox>div:nth-child(6)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(6)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(6)>label>input[type="checkbox"]:checked~span
+{
+    background: #ced46a;
+    color: white;
+    border: 2px solid #ced46a;
+    
+}
+.typeCheckBox>div:nth-child(6)>label>span:hover
+{
+    background: #ced46a;
+    color: white;
+    border: 2px solid #ced46a;
+}
+/*전시*/
+.typeCheckBox>div:nth-child(7)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(7)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(7)>label>input[type="checkbox"]:checked~span
+{
+    background: #29abe2;
+    color: white;
+    border: 2px solid #29abe2;
+
+}
+.typeCheckBox>div:nth-child(7)>label>span:hover
+{
+    background: #29abe2;
+    color: white;
+    border: 2px solid #29abe2;
+}
+/*무용*/
+.typeCheckBox>div:nth-child(8)>label>span{
+    width: 78%;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    background: white;
+    padding: 15px 30px;
+    color: #555;
+    border: 2px solid #191919;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #191919;
+    user-select: none;
+    outline: none;
+}
+.typeCheckBox>div:nth-child(8)>label>span:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.typeCheckBox>div:nth-child(8)>label>input[type="checkbox"]:checked~span
+{
+    background: #191919;
+    color: white;
+    border: 2px solid #191919;
+}
+.typeCheckBox>div:nth-child(8)>label>span:hover
+{
+    background: #191919;
+    color: white;
+    border: 2px solid #191919;
+}
+/*-------------------기능메뉴 버튼 디자인------------------------*/
+.functionMenu{
+    width: 100%;
+    height: 50px;
+    margin: 2px;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    display: inline-flex;
+    position: relative;
+
+    
+}
+.functionMenu>div{
+    width: 50%;
+    height: 50px;
+    margin: 2px;
+    padding: 0;
+
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    position: absolute;
+
+}
+.functionMenu>div>label{
+    display: inline-block;
+}
+.functionMenu>div>label>input[type="checkbox"]{
+    display: none;
+}
+.functionMenu>div>label>span{
+    width: 15vh;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    background: white;
+    border: 1px solid #113a6b;
+    transition: 0.3s ease-in-out;
+    user-select: none;
+    overflow: hidden;
+    color: #113a6b;
+    outline: none;
+    display:table-cell;
+    vertical-align:middle; 
+    border-radius: 10px;
+
+}
+.functionMenu>div>label>span:before{
+    content: '';    
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+}
+.functionMenu>div>label>input[type="checkbox"]:checked~span
+{
+    background: #113a6b;
+    color: white;
+}
+.functionMenu>div>label>span:hover
+{
+    background: #113a6b;
+    color: white;
+}
+
+.underline-btn {
+    margin-left: 5%;
+    margin-right: 5%;
+    display: inline-block;
+    padding: 1em 0;
+    border-radius: 0;
+    color: #113a6b;
+    margin-top: 2rem;
+    font-weight: bold;
+    font-size:15px;
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+  }
+  .underline-btn:before, .underline-btn:after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 1px;
+    width: 0;
+  }
+  .underline-btn:before {
+    transition: width 0s ease, background 0.4s ease;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+  }
+  .underline-btn:after {
+    right: 2.2%;
+    bottom: 6px;
+    background: #113a6b;
+    transition: width 0.4s ease;
+  }
+  .underline-btn:hover:before {
+    width: 97.8%;
+    background: #113a6b;
+    transition: width 0.4s ease;
+  }
+  .underline-btn:hover:after {
+    width: 97.8%;
+    background: 0 0;
+    transition: all 0s ease;
+  }
+  

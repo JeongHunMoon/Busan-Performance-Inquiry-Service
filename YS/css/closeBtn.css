@@ -1,0 +1,45 @@
+.closeButton {
+    border: 2px solid #fff;
+    height: 40px;
+    width: 50px;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    margin: 25px;
+    background-color: rgba(255, 255, 255, 0);
+}
+.closeButton::after {
+      content: "X";
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translate(-50%);
+      color: #fff;
+      transition: all 0.1s linear;
+      background-color: rgba(255, 255, 255, 0);
+}
+  
+.closeButton::before {
+      content: "";
+      position: relative;
+      display: block;
+      height: 15px;
+      width: 15px;
+      background: #fff;
+      box-shadow: 0px 0px 10px 3px #0ff;
+      margin-left: -8px;
+      margin-top: -8px;
+      opacity: 0;
+      transition: all 0.1s linear;
+      border-radius: 100%;
+      animation: star 1.3s linear infinite;
+    }
+
+.closeButton:hover::after {
+        content: "close";
+        text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 20px #fff,
+          0 0 30px #fff, 0 0 40px #fff, 0 0 50px #fff, 0 0 60px #fff;
+      }
+    
+  
